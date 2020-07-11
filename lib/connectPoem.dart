@@ -113,67 +113,66 @@ class _ConnectPoemState extends State<ConnectPoem> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    DataTable(
-                      columns: const <DataColumn>[
-                        DataColumn(
-                          label: Text(
-                            '아이디',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            '제목',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            '♥ ★',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                      rows: <DataRow>[
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('소리야'),
-                                onTap: (){
-                                  print('hello');
-                                  MaterialPageRoute(builder: (context) => WritePoem());
-                                },
-                            ),
-                            DataCell(Text('엄마생각'),
-                              onTap: (){
-                                MaterialPageRoute(builder: (context) => ReadPoem());
-                              },
-                            ),
-                            DataCell(Text('3 5'),
-                              onTap: (){
-                                MaterialPageRoute(builder: (context) => ReadPoem());
-                              },
-                            ),
-                          ],
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('사랑')),
-                            DataCell(Text('눈사람')),
-                            DataCell(Text('40 90')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('잇다')),
-                            DataCell(Text('하얀눈')),
-                            DataCell(Text('65 7')),
-                          ],
-                        ),
-                      ],
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage('assets/Itda_black.png'),
+                      ),
+                      title: Text('Horse'),
+                      subtitle: Text('A strong animal'),
+                      trailing: Icon(Icons.keyboard_arrow_right),
+                      onTap: () {
+                        print('horse');
+                      },
+                      selected: true,
+                    ),
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage('assets/Itda_black.png'),
+                      ),
+                      title: Text('Cow'),
+                      subtitle: Text('Provider of milk'),
+                      trailing: Icon(Icons.keyboard_arrow_right),
+                      onTap: () {
+                        print('cow');
+                      },
+                    ),
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage('assets/Itda_black.png'),
+                      ),
+                      title: Text('Camel'),
+                      subtitle: Text('Comes with humps'),
+                      trailing: Icon(Icons.keyboard_arrow_right),
+                      onTap: () {
+                        print('camel');
+                      },
+                      enabled: false,
+                    ),
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage('assets/Itda_black.png'),
+                      ),
+                      title: Text('Sheep'),
+                      subtitle: Text('Provides wool'),
+                      trailing: Icon(Icons.keyboard_arrow_right),
+                      onTap: () {
+                        print('sheep');
+                      },
+                    ),
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage('assets/Itda_black.png'),
+                      ),
+                      title: Text('Goat'),
+                      subtitle: Text('Some have horns'),
+                      trailing: Icon(Icons.keyboard_arrow_right),
+                      onTap: () {
+                        print('goat');
+                      },
                     ),
                   ],
-                ))
-          ])
+                ),),
+          ],),
         ]));
   }
 }

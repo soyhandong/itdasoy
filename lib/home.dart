@@ -50,27 +50,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-<<<<<<< HEAD
-=======
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: HexColor("#55965e"),
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.help,
-              color: HexColor("#fbb359"),
-            ),
-            onPressed: (){
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HelpPage()));
-            },
-          )
-        ],
->>>>>>> origin/master
         backgroundColor: Colors.white,
         appBar: AppBar(
           iconTheme: IconThemeData(
@@ -155,7 +134,6 @@ class _HomePageState extends State<HomePage> {
                             )
                           ],
                         ),
-<<<<<<< HEAD
                         Container(
                             width: 300,
                             height: 20,
@@ -179,31 +157,6 @@ class _HomePageState extends State<HomePage> {
                                       color: HexColor("#fbb359"),
                                     ),
                                   ],
-=======
-                      ),
-                      child: Stack(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Icon(
-                                Icons.control_point,
-                                size: 20,
-                                color: HexColor("#fbb359"),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              Text(
-                                "$point",
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: HexColor("#fbb359"),
->>>>>>> origin/master
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
@@ -253,7 +206,6 @@ class _HomePageState extends State<HomePage> {
                     SystemNavigator.pop();
                   },
                 ),
-<<<<<<< HEAD
                 ListTile(
                   title: Text('Item 2'),
                   onTap: () {
@@ -276,56 +228,6 @@ class _HomePageState extends State<HomePage> {
                 height: 80,
                 child: Image.asset('assets/Font.png'),
               ),
-=======
-
-                decoration: BoxDecoration(
-                  color: HexColor("#55965e"),
-                ),
-              ),
-            ),
-            ListTile(
-              title: Row(
-                children: [
-                  Icon(
-                    Icons.backspace,
-                    color: HexColor("#707070"),
-                    size: 20,
-                  ),
-                  Text(
-                    "  종료하기",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
-                  )
-                ],
-              ),
-              onTap: () {
-                SystemNavigator.pop();
-              },
-            ),
-            ListTile(
-              title: Text('Item 2'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        )
-      ),
-      body: ListView(
-
-        children: <Widget>[
-          SizedBox(height: 100),
-          Center(
-            child: Container(
-              width: 100,
-              height: 80,
-              child: Image.asset('assets/Font.png'),
->>>>>>> origin/master
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -347,7 +249,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-<<<<<<< HEAD
             Center(
                 child: Column(
                   children: <Widget>[
@@ -364,73 +265,6 @@ class _HomePageState extends State<HomePage> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-=======
-          Center(
-            child: Column(
-              children: <Widget>[
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "세상을 잇는 ",
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        "\""+nickname+"\"",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        "님을",
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                Text(
-                  "오늘도 응원합니다",
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            )
-          ),
-          SizedBox(height: 100),
-          Center(
-            child: ButtonTheme(
-                minWidth: 200.0,
-                height: 50.0,
-                child: RaisedButton(
-                    onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MakeMeal()));
-                    },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    color: HexColor("#55965e"),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.fromLTRB(0, 0, 60, 0),
-                          child: Icon(
-                            Icons.restaurant,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(0, 0, 60, 0),
-                          child: Text(
-                            "식사를 잇다",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold
-                            ),
->>>>>>> origin/master
                           ),
                         ),
                         Text(
@@ -446,7 +280,6 @@ class _HomePageState extends State<HomePage> {
                   ],
                 )
             ),
-<<<<<<< HEAD
             SizedBox(height: 100),
             Center(
               child: ButtonTheme(
@@ -470,42 +303,6 @@ class _HomePageState extends State<HomePage> {
                               Icons.restaurant,
                               color: Colors.white,
                               size: 30,
-=======
-          ),
-          SizedBox(height: 30),
-          Center(
-            child: ButtonTheme(
-                minWidth: 200.0,
-                height: 50.0,
-                child: RaisedButton(
-                    onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ConnectHeart()));
-                    },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    color: HexColor("#55965e"),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.fromLTRB(0, 0, 60, 0),
-                          child: Icon(
-                            Icons.favorite,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(0, 0, 60, 0),
-                          child: Text(
-                            "마음을 잇다",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold
->>>>>>> origin/master
                             ),
                           ),
                           Container(
@@ -524,7 +321,6 @@ class _HomePageState extends State<HomePage> {
                   )
               ),
             ),
-<<<<<<< HEAD
             SizedBox(height: 30),
             Center(
               child: ButtonTheme(
@@ -589,42 +385,6 @@ class _HomePageState extends State<HomePage> {
                               Icons.description,
                               color: Colors.white,
                               size: 30,
-=======
-          ),
-          SizedBox(height: 30),
-          Center(
-            child: ButtonTheme(
-                minWidth: 200.0,
-                height: 50.0,
-                child: RaisedButton(
-                    onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Goal_ListPage()));
-                    },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    color: HexColor("#55965e"),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.fromLTRB(0, 0, 60, 0),
-                          child: Icon(
-                            Icons.description,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(0, 0, 60, 0),
-                          child: Text(
-                            "목표를 잇다",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold
->>>>>>> origin/master
                             ),
                           ),
                           Container(

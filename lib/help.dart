@@ -15,11 +15,7 @@ class HelpPage extends StatelessWidget{
               color: HexColor("#55965e"),
             ),
             onPressed: () =>
-<<<<<<< HEAD
                 Navigator.of(context).pop()
-=======
-              Navigator.of(context).pop()
->>>>>>> origin/master
             ,
           )
         ],
@@ -57,7 +53,6 @@ class HelpPage extends StatelessWidget{
                   Container(
                       width: 320,
                       height: 100,
-<<<<<<< HEAD
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
@@ -111,8 +106,6 @@ class HelpPage extends StatelessWidget{
                   Container(
                       width: 320,
                       height: 100,
-=======
->>>>>>> origin/master
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
@@ -120,20 +113,13 @@ class HelpPage extends StatelessWidget{
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-<<<<<<< HEAD
                                   Icons.favorite,
-=======
-                                  Icons.restaurant,
->>>>>>> origin/master
                                   size: 40,
                                   color: Colors.black
                               )
                             ],
                           ),
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/master
                           Padding(
                             padding: EdgeInsets.fromLTRB(30,10,0,0),
                             child: Column(
@@ -141,33 +127,19 @@ class HelpPage extends StatelessWidget{
                               children: <Widget>[
                                 Container(
                                   child: Text(
-<<<<<<< HEAD
                                     "마음을 잇다",
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black
-=======
-                                    "식사를 잇다",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
->>>>>>> origin/master
                                     ),
                                   ),
                                 ),
                                 Container(
                                   child: Text(
-<<<<<<< HEAD
                                     "시, 이야기, 노래를 통해"
                                         "나의 마음을 다스리고\n"
                                         "상대방을 이해하기 위해 노력해 보아요",
-=======
-                                    "우리 학교 식단을 보고 "
-                                        "내가 먹고 싶은 메뉴를 계획\n하여"
-                                        "친구, 선생님, 부모님께 보여줄 수 있어요",
->>>>>>> origin/master
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold
@@ -186,63 +158,6 @@ class HelpPage extends StatelessWidget{
                     child: Divider(thickness: 1),
                   ),
                   Container(
-<<<<<<< HEAD
-=======
-                    width: 320,
-                    height: 100,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                             Icon(
-                                Icons.favorite,
-                                size: 40,
-                                color: Colors.black
-                            )
-                          ],
-                        ),
-
-                       Padding(
-                         padding: EdgeInsets.fromLTRB(30,10,0,0),
-                         child: Column(
-                           crossAxisAlignment: CrossAxisAlignment.start,
-                           children: <Widget>[
-                             Container(
-                               child: Text(
-                                 "마음을 잇다",
-                                 style: TextStyle(
-                                     fontSize: 20,
-                                     fontWeight: FontWeight.bold,
-                                     color: Colors.black
-                                 ),
-                               ),
-                             ),
-                             Container(
-                               child: Text(
-                                 "시, 이야기, 노래를 통해"
-                                     "나의 마음을 다스리고\n"
-                                     "상대방을 이해하기 위해 노력해 보아요",
-                                 style: TextStyle(
-                                     fontSize: 12,
-                                     fontWeight: FontWeight.bold
-                                 ),
-                               ),
-                             ),
-                           ],
-                         ),
-                       ),
-                      ],
-                    )
-                  ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(0,0,10,0),
-                    width: 320,
-                    child: Divider(thickness: 1),
-                  ),
-                  Container(
->>>>>>> origin/master
                       width: 320,
                       height: 100,
                       child: Row(

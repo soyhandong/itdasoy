@@ -19,17 +19,10 @@ class _GoalPageState extends State<GoalPage> {
   final _weektextController = TextEditingController();
   final _yeartextController = TextEditingController();
 
-<<<<<<< HEAD
   String today =" ";
   String week = "";
   String year="";
   FirebaseUser user ;
-=======
-   String today =" ";
-   String week = "";
-   String year="";
-   FirebaseUser user ;
->>>>>>> origin/master
 
   Future<String> getUser () async {
     user = await FirebaseAuth.instance.currentUser();
@@ -336,7 +329,3 @@ class HexColor extends Color {
 
   HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master

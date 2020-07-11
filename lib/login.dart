@@ -30,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
   void validateAndSubmit() async {
     if (form.validate()) {
       try {
-<<<<<<< HEAD
         form.save();
         FirebaseUser user = (await _auth.signInWithEmailAndPassword(
             email: _email, password: _password)).user;
@@ -39,16 +38,6 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HomePage()));
-=======
-          form.save();
-          FirebaseUser user = (await _auth.signInWithEmailAndPassword(
-              email: _email, password: _password)).user;
-          print('Signed In: ${user.uid}');
-          Navigator.of(context).pop();
-          Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()));
->>>>>>> origin/master
       } catch (e) {
         print('Error: $e');
       }
@@ -66,19 +55,11 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(height: 150,),
           Center(
 
-<<<<<<< HEAD
               child: Container(
                 height: 120,
                 width: 120,
                 child: Image.asset('assets/Font.png'),
               )
-=======
-            child: Container(
-              height: 120,
-              width: 120,
-              child: Image.asset('assets/Font.png'),
-            )
->>>>>>> origin/master
           ),
           SizedBox(height: 50),
           Expanded(
@@ -147,19 +128,11 @@ class _LoginPageState extends State<LoginPage> {
                             padding: EdgeInsets.fromLTRB(40, 15, 40, 15),
                             color: Colors.white,
                             shape: RoundedRectangleBorder(
-<<<<<<< HEAD
                               borderRadius: BorderRadius.circular(10.0),
                               side: BorderSide(color: HexColor("#53975c")),
                             ),
                             child: Text(
                               '회원가입',
-=======
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: HexColor("#53975c")),
-                            ),
-                            child: Text(
-                                '회원가입',
->>>>>>> origin/master
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,

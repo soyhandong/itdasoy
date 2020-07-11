@@ -7,59 +7,44 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "2.0.13"
   args:
-=======
     version: "2.4.1"
   boolean_selector:
->>>>>>> origin/master
     dependency: transitive
     description:
       name: boolean_selector
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "1.6.0"
   async:
-=======
     version: "2.0.0"
   characters:
->>>>>>> origin/master
     dependency: transitive
     description:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "2.4.1"
   boolean_selector:
-=======
     version: "1.0.0"
   charcode:
->>>>>>> origin/master
     dependency: transitive
     description:
       name: charcode
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "2.0.0"
   charcode:
-=======
     version: "1.1.3"
   clock:
->>>>>>> origin/master
     dependency: transitive
     description:
       name: clock
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "1.1.3"
-=======
     version: "1.0.1"
->>>>>>> origin/master
   cloud_firestore:
     dependency: "direct main"
     description:
@@ -68,7 +53,6 @@ packages:
     source: hosted
     version: "0.13.7"
   cloud_firestore_platform_interface:
-<<<<<<< HEAD
     dependency: transitive
     description:
       name: cloud_firestore_platform_interface
@@ -83,20 +67,15 @@ packages:
     source: hosted
     version: "0.1.1+2"
   collection:
-=======
->>>>>>> origin/master
     dependency: transitive
     description:
       name: cloud_firestore_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "1.14.12"
   convert:
-=======
     version: "1.1.2"
   cloud_firestore_web:
->>>>>>> origin/master
     dependency: transitive
     description:
       name: cloud_firestore_web
@@ -109,11 +88,8 @@ packages:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "2.1.4"
-=======
     version: "1.14.13"
->>>>>>> origin/master
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -121,8 +97,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
-<<<<<<< HEAD
-=======
   fake_async:
     dependency: transitive
     description:
@@ -130,7 +104,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
->>>>>>> origin/master
   firebase:
     dependency: transitive
     description:
@@ -217,7 +190,6 @@ packages:
     source: hosted
     version: "0.12.1"
   http_parser:
-<<<<<<< HEAD
     dependency: transitive
     description:
       name: http_parser
@@ -225,18 +197,13 @@ packages:
     source: hosted
     version: "3.1.4"
   image:
-=======
->>>>>>> origin/master
     dependency: transitive
     description:
       name: http_parser
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "2.1.12"
-=======
     version: "3.1.4"
->>>>>>> origin/master
   image_picker:
     dependency: "direct main"
     description:
@@ -264,11 +231,8 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "0.12.6"
-=======
     version: "0.12.8"
->>>>>>> origin/master
   meta:
     dependency: transitive
     description:
@@ -290,7 +254,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.0"
-<<<<<<< HEAD
   petitparser:
     dependency: transitive
     description:
@@ -298,8 +261,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.0"
-=======
->>>>>>> origin/master
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -360,11 +321,8 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "0.2.15"
-=======
     version: "0.2.17"
->>>>>>> origin/master
   typed_data:
     dependency: transitive
     description:
@@ -379,7 +337,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
-<<<<<<< HEAD
   xml:
     dependency: transitive
     description:
@@ -389,8 +346,6 @@ packages:
     version: "3.6.1"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-=======
 sdks:
   dart: ">=2.9.0-14.0.dev <3.0.0"
->>>>>>> origin/master
   flutter: ">=1.12.13+hotfix.4 <2.0.0"

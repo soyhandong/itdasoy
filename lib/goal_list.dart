@@ -40,19 +40,11 @@ class Goal_ListPage extends StatelessWidget{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AspectRatio(
-<<<<<<< HEAD
               aspectRatio: 18 / 11,
               child: Image.asset(
                 'assets/user.png',
                 fit: BoxFit.contain,
               )
-=======
-            aspectRatio: 18 / 11,
-            child: Image.asset(
-              'assets/user.png',
-              fit: BoxFit.contain,
-            )
->>>>>>> origin/master
           ),
           Expanded(
             child: Column(
@@ -104,11 +96,7 @@ class Goal_ListPage extends StatelessWidget{
                     Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => GoalPage(email: record.email)));
-<<<<<<< HEAD
                   },
-=======
-                    },
->>>>>>> origin/master
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -136,7 +124,6 @@ class Goal_ListPage extends StatelessWidget{
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-<<<<<<< HEAD
           elevation: 0,
           backgroundColor: HexColor("#e9f4eb"),
           centerTitle: true,
@@ -170,41 +157,6 @@ class Goal_ListPage extends StatelessWidget{
               ),
             ],
           )
-=======
-        elevation: 0,
-        backgroundColor: HexColor("#e9f4eb"),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.help,
-              color: HexColor("#fbb359"),
-            ),
-            onPressed: (){
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HelpPage()));
-            },
-          )
-        ],
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-                "목표를 ",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            Container(
-              width: 28,
-              child: Image.asset("assets/Itda_black.png"),
-            ),
-          ],
-        )
->>>>>>> origin/master
       ),
       body: _buildBody(context),
     );
@@ -247,9 +199,4 @@ class HexColor extends Color {
   }
 
   HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
-<<<<<<< HEAD
 }
-=======
-}
-
->>>>>>> origin/master
