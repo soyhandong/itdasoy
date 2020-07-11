@@ -175,8 +175,5 @@ class _ReadPoemState extends State<ReadPoem> {
         ),
       ),
     );
-
   }
 }
-
-

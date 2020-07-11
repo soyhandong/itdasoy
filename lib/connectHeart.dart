@@ -1,7 +1,7 @@
 //https://github.com/rajayogan/flutterui-curveddesigns
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'connectPoem.dart';
+import 'poemConnect.dart';
 
 class ConnectHeart extends StatefulWidget {
   @override
@@ -26,7 +26,7 @@ class _ConnectHeartState extends State<ConnectHeart> {
               onPressed: (){
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ConnectPoem()));
+                    MaterialPageRoute(builder: (context) => PoemConnect()));
               },
             )
           ],
@@ -55,11 +55,11 @@ class _ConnectHeartState extends State<ConnectHeart> {
             child: Text(
                 "시, 이야기, 노래를 통해 나의 마음을 다스리고 상대방을 이해하기 위해 노력해 보아요!",
                 style: TextStyle(
-                    color: Color(0xff000000),
-                    fontWeight: FontWeight.w700,
-                    fontFamily: "Arita-dotum-_OTF",
-                    fontStyle: FontStyle.normal,
-                    fontSize: 14,
+                  color: Color(0xff000000),
+                  fontWeight: FontWeight.w700,
+                  fontFamily: "Arita-dotum-_OTF",
+                  fontStyle: FontStyle.normal,
+                  fontSize: 14,
                 ),
                 textAlign: TextAlign.center
             ),
@@ -94,11 +94,11 @@ class _ConnectHeartState extends State<ConnectHeart> {
             child: Text(
                 "나의 마음을 시, 이야기 노래로 녹음하여 다른 학교 친구들과 나눌 수 있어요 함께 해볼까요? ",
                 style: TextStyle(
-                    color: Color(0xff000000),
-                    fontWeight: FontWeight.w500,
-                    fontFamily: "Arita-dotum-_OTF",
-                    fontStyle: FontStyle.normal,
-                    fontSize: 11,
+                  color: Color(0xff000000),
+                  fontWeight: FontWeight.w500,
+                  fontFamily: "Arita-dotum-_OTF",
+                  fontStyle: FontStyle.normal,
+                  fontSize: 11,
                 ),
                 textAlign: TextAlign.center
             ),
@@ -118,7 +118,7 @@ class _ConnectHeartState extends State<ConnectHeart> {
                   onTap: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ConnectPoem()));
+                        MaterialPageRoute(builder: (context) => PoemConnect()));
                   },
                 ),
                 SizedBox(height: 30.0,),
@@ -127,7 +127,7 @@ class _ConnectHeartState extends State<ConnectHeart> {
                   onTap: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ConnectPoem()));
+                        MaterialPageRoute(builder: (context) => PoemConnect()));
                   },
                 ),
                 SizedBox(height: 30.0,),
@@ -136,7 +136,7 @@ class _ConnectHeartState extends State<ConnectHeart> {
                   onTap: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ConnectPoem()));
+                        MaterialPageRoute(builder: (context) => PoemConnect()));
                   },
                 ),
               ],
