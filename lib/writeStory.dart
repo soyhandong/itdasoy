@@ -1,18 +1,17 @@
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:itda/poemConnect.dart';
+import 'package:itda/writePoem.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:itda/readStory.dart';
 
-class WritePoem extends StatefulWidget {
+class WriteStory extends StatefulWidget {
   @override
-  _WritePoemState createState() => _WritePoemState();
+  _WriteStoryState createState() => _WriteStoryState();
 }
 
-class _WritePoemState extends State<WritePoem> {
+class _WriteStoryState extends State<WriteStory> {
+  var ssubject, scontent, srecord;
   final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,10 +26,10 @@ class _WritePoemState extends State<WritePoem> {
                 Icons.help,
                 color: Color(0xfffbb359),
               ),
-              onPressed: (){
+              onPressed: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PoemConnect()));
+                    MaterialPageRoute(builder: (context) => WritePoem()));
               },
             )
           ],
@@ -150,6 +149,7 @@ class _WritePoemState extends State<WritePoem> {
                               ),
                               child: TextFormField(
                                 maxLines: 1,
+                                onChanged: (text) => ssubject = text,
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return '제목을 쓰세요';
@@ -181,6 +181,7 @@ class _WritePoemState extends State<WritePoem> {
                               ),
                               child: TextFormField(
                                 maxLines: 30,
+                                onChanged: (text) => scontent = text,
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return '느낀점을 쓰세요';
@@ -211,6 +212,7 @@ class _WritePoemState extends State<WritePoem> {
                                   color: const Color(0x69e9f4eb)
                               ),
                               child: TextFormField(
+                                onChanged: (text) => srecord = text,
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return '녹음을 하세요';
@@ -245,11 +247,10 @@ class _WritePoemState extends State<WritePoem> {
                         ),
                         child: GestureDetector(
                           child: _wPBuildConnectItem('assets/itda_orange.png','잇기(올리기)'),
-                          onTap: () {
-                            if (_formKey.currentState.validate()) {
-                              Scaffold.of(context)
-                                  .showSnackBar(SnackBar(content: Text('제목을쓰세요')));
-                            }
+                          onTap: () async{
+                            await Firestore.instance.collection('storyList').add({'ssubject':ssubject, 'scontent':scontent, 'srecord': srecord});
+                            ssubject = ''; scontent = ''; srecord = '';
+                            Navigator.pop(context);
                           },
                         ),
                       ),
@@ -272,6 +273,24 @@ class _WritePoemState extends State<WritePoem> {
                     ],
                   ),
                 ),
+
+                /*
+                TextField(
+                  onChanged: (text) => title = text,
+                ),
+                TextField(
+                  onChanged: (text) => subtitle = text,
+                ),
+                RaisedButton(
+                  onPressed: () async {
+                    await Firestore.instance.collection('test').add({ 'title': title, 'subtitle': subtitle });
+                    title = ''; subtitle = '';
+                    Navigator.pop(context);
+                  },
+                  child: Text('Go back!'),
+                ),
+                */
+
               ],
             ),
           ),

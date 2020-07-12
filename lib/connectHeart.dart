@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'poemConnect.dart';
+import 'package:itda/storyConnect.dart';
 
 class ConnectHeart extends StatefulWidget {
   @override
@@ -127,7 +128,7 @@ class _ConnectHeartState extends State<ConnectHeart> {
                   onTap: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => PoemConnect()));
+                        MaterialPageRoute(builder: (context) => StoryConnect()));
                   },
                 ),
                 SizedBox(height: 30.0,),
