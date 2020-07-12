@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:itda/writePoem.dart';
@@ -11,7 +12,38 @@ class WriteStory extends StatefulWidget {
 
 class _WriteStoryState extends State<WriteStory> {
   var ssubject, scontent, srecord;
+  Firestore _firestore = Firestore.instance;
+  FirebaseUser user;
+  String email="이메일";
+  String nickname="닉네임";
+  String school = "학교";
+  String grade = "학년";
+  String clas = "반";
+  int point = -1;
+  dynamic data;
   final _formKey = GlobalKey<FormState>();
+
+  Future<String> getUser () async {
+    user = await FirebaseAuth.instance.currentUser();
+    DocumentReference documentReference =  Firestore.instance.collection("loginInfo").document(user.email);
+    await documentReference.get().then<dynamic>(( DocumentSnapshot snapshot) async {
+      setState(() {
+        nickname =snapshot.data["nickname"];
+        school = snapshot.data["schoolname"];
+        grade = snapshot.data["grade"];
+        clas = snapshot.data["class"];
+        point = snapshot.data["point"];
+      });
+    });
+  }
+
+  @override
+  void initState() {
+
+    super.initState();
+    getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -248,8 +280,8 @@ class _WriteStoryState extends State<WriteStory> {
                         child: GestureDetector(
                           child: _wPBuildConnectItem('assets/itda_orange.png','잇기(올리기)'),
                           onTap: () async{
-                            await Firestore.instance.collection('storyList').add({'ssubject':ssubject, 'scontent':scontent, 'srecord': srecord});
-                            ssubject = ''; scontent = ''; srecord = '';
+                            await Firestore.instance.collection('storyList').add({'nickname':nickname, 'school':school, 'ssubject':ssubject, 'scontent':scontent, 'srecord': srecord});
+                            nickname = ''; school = ''; ssubject = ''; scontent = ''; srecord = '';
                             Navigator.pop(context);
                           },
                         ),
@@ -273,24 +305,6 @@ class _WriteStoryState extends State<WriteStory> {
                     ],
                   ),
                 ),
-
-                /*
-                TextField(
-                  onChanged: (text) => title = text,
-                ),
-                TextField(
-                  onChanged: (text) => subtitle = text,
-                ),
-                RaisedButton(
-                  onPressed: () async {
-                    await Firestore.instance.collection('test').add({ 'title': title, 'subtitle': subtitle });
-                    title = ''; subtitle = '';
-                    Navigator.pop(context);
-                  },
-                  child: Text('Go back!'),
-                ),
-                */
-
               ],
             ),
           ),

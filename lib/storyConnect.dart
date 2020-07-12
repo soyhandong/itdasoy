@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:itda/writePoem.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:itda/writeStory.dart';
 
 class StoryConnect extends StatefulWidget {
@@ -10,6 +11,34 @@ class StoryConnect extends StatefulWidget {
 }
 
 class _StoryConnectState extends State<StoryConnect> {
+  Firestore _firestore = Firestore.instance;
+  FirebaseUser user ;
+  String email="이메일";
+  String nickname="닉네임";
+  String school = "학교";
+  String grade = "학년";
+  String clas = "반";
+  int point = -1;
+  dynamic data;
+
+  Future<String> getUser () async {
+    user = await FirebaseAuth.instance.currentUser();
+    DocumentReference documentReference =  Firestore.instance.collection("loginInfo").document(user.email);
+    await documentReference.get().then<dynamic>(( DocumentSnapshot snapshot) async {
+      setState(() {
+        nickname =snapshot.data["nickname"];
+        school = snapshot.data["schoolname"];
+        grade = snapshot.data["grade"];
+        clas = snapshot.data["class"];
+        point = snapshot.data["point"];
+      });
+    });
+  }
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,45 +122,6 @@ class _StoryConnectState extends State<StoryConnect> {
                 ],
               ),
             ),
-            /*
-            Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: AssetImage(
-                          'assets/Itda_black.png'),
-                    ),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text('소영',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            //color: Colors.black,
-                          ),
-                        ),
-                        Container(width: 10.0,),
-                        Text('학교',
-                          style: TextStyle(
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                    subtitle: Text('제목',),
-                    trailing: Icon(Icons.keyboard_arrow_right),
-                    onTap: () => {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => WritePoem())),
-                    },
-                    //selected: true,
-                  ),
-                ],
-              ),
-            ),
-            */
             _slist(),
             SizedBox(height: 10.0,),
             Container(
@@ -156,7 +146,6 @@ class _StoryConnectState extends State<StoryConnect> {
                 ],
               ),
             ),
-            //_list(),
           ],
         ),
       ),
@@ -214,7 +203,7 @@ class _StoryConnectState extends State<StoryConnect> {
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Text(item['ssubject'],
+                        Text(item['nickname'],
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -222,14 +211,14 @@ class _StoryConnectState extends State<StoryConnect> {
                           ),
                         ),
                         Container(width: 10.0,),
-                        Text(item['scontent'],
+                        Text(item['school'],
                           style: TextStyle(
                             fontSize: 13,
                           ),
                         ),
                       ],
                     ),
-                    subtitle: Text(item['srecord'],),
+                    subtitle: Text(item['ssubject'],),
                     trailing: Icon(Icons.keyboard_arrow_right),
                     onTap: () => {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => WritePoem())),
@@ -242,26 +231,4 @@ class _StoryConnectState extends State<StoryConnect> {
       ),
     );
   }
-  /*
-  Widget _list () {
-    return Expanded(
-      child: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('test').snapshots(),
-          builder: (context, snapshot) {
-            final items = snapshot.data.documents;
-            return ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                final item = items[index];
-                return ListTile(
-                    title: Text(item['title']),
-                    subtitle: Text(item['subtitle'])
-                );
-              },
-            );
-          }
-      ),
-    );
-  }
-   */
 }
