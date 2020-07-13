@@ -76,7 +76,6 @@ class _ReadPoemState extends State<ReadPoem> {
                     ],
                   ),
                 ),
-
                 Container(
                   padding: EdgeInsets.all(10.0),
                   child: Column(

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:itda/writePoem.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:itda/writeStory.dart';
+import 'package:itda/readStory.dart';
+import 'package:itda/writesStory.dart';
 
 class StoryConnect extends StatefulWidget {
   @override
@@ -109,7 +109,7 @@ class _StoryConnectState extends State<StoryConnect> {
                   ),
                   Container(
                     child: Text(
-                      '시로 마음을 잇다',
+                      '이야기로 마음을 잇다',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
@@ -139,7 +139,7 @@ class _StoryConnectState extends State<StoryConnect> {
                     child: GestureDetector(
                       child: _wPBuildConnectItem('assets/itda_orange.png', '글쓰기'),
                       onTap: () => {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => WritePoem())),
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => WriteStory())),
                       },
                     ),
                   ),
@@ -221,7 +221,7 @@ class _StoryConnectState extends State<StoryConnect> {
                     subtitle: Text(item['ssubject'],),
                     trailing: Icon(Icons.keyboard_arrow_right),
                     onTap: () => {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => WritePoem())),
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ReadStory())),
                     },
                     //selected: true,
                 );
