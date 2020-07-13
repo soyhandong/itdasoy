@@ -12,6 +12,9 @@ class WriteStory extends StatefulWidget {
 
 class _WriteStoryState extends State<WriteStory> {
   var ssubject, scontent, srecord;
+  static int sindex = 1;
+  String sindexing = "$sindex";
+
   Firestore _firestore = Firestore.instance;
   FirebaseUser user;
   String email="이메일";
@@ -280,8 +283,9 @@ class _WriteStoryState extends State<WriteStory> {
                         child: GestureDetector(
                           child: _wPBuildConnectItem('assets/itda_orange.png','잇기(올리기)'),
                           onTap: () async{
-                            await Firestore.instance.collection('storyList').add({'nickname':nickname, 'school':school, 'ssubject':ssubject, 'scontent':scontent, 'srecord': srecord});
-                            nickname = ''; school = ''; ssubject = ''; scontent = ''; srecord = '';
+                            await Firestore.instance.collection('storyList').document(sindexing).setData({'email':email, 'nickname':nickname, 'school':school, 'clas':clas, 'grade':grade, 'ssubject':ssubject, 'scontent':scontent, 'srecord': srecord, 'sindexing':sindexing});
+                            email = ''; nickname = ''; school = ''; clas = ''; grade = ''; ssubject = ''; scontent = ''; srecord = ''; sindexing = '';
+                            sindex = sindex + 1;
                             Navigator.pop(context);
                           },
                         ),

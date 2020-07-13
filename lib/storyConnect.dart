@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:itda/readStory.dart';
-import 'package:itda/writesStory.dart';
+import 'package:itda/writeStory.dart';
 
 class StoryConnect extends StatefulWidget {
   @override
@@ -186,6 +186,7 @@ class _StoryConnectState extends State<StoryConnect> {
     );
   }
   Widget _slist () {
+    //final srecord = SRecord.fromSnapshot(data);
     return Expanded(
       child: StreamBuilder<QuerySnapshot>(
           stream: Firestore.instance.collection('storyList').snapshots(),
@@ -195,7 +196,8 @@ class _StoryConnectState extends State<StoryConnect> {
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final item = items[index];
-                return ListTile(
+                return InkWell(
+                  child: ListTile(
                     leading: CircleAvatar(
                       backgroundImage: AssetImage(
                           'assets/Itda_black.png'),
@@ -224,6 +226,7 @@ class _StoryConnectState extends State<StoryConnect> {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => ReadStory())),
                     },
                     //selected: true,
+                  ),
                 );
               },
             );
@@ -231,4 +234,41 @@ class _StoryConnectState extends State<StoryConnect> {
       ),
     );
   }
+}
+
+class SRecord{
+  final String nickname;
+  final String school;
+  final String clas;
+  final String grade;
+  final String email;
+  final String ssubject;
+  final String scontent;
+  final String srecord;
+  final String sindexing;
+
+  SRecord.fromMap(Map<String, dynamic> map)
+      : assert(map['nickname'] != null),
+        assert(map['schoolname'] != null),
+        assert(map['class'] != null),
+        assert(map['grade'] != null),
+        assert(map['email'] != null),
+        assert(map['ssubject'] != null),
+        assert(map['scontent'] != null),
+        assert(map['srecord'] != null),
+        assert(map['sindexing'] != null),
+
+        nickname = map['nickname'],
+        school = map['schoolname'],
+        clas = map['class'],
+        email =map['email'],
+        grade = map['grade'],
+        ssubject =map['ssubject'],
+        scontent =map['scontent'],
+        srecord =map['srecord'],
+        sindexing =map['sindexing'];
+
+  SRecord.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data);
+
 }
