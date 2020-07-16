@@ -9,25 +9,113 @@ import 'package:itda/goal_list.dart';
 import 'goal_list.dart';
 
 
-class GoalPage extends StatefulWidget{
+class GoalEditPage extends StatefulWidget{
   String email;
-  GoalPage({Key key,@required this.email}) : super(key: key);
+  GoalEditPage({Key key,@required this.email}) : super(key: key);
 
   @override
-  _GoalPageState createState() => _GoalPageState();
+  _GoalEditPageState createState() => _GoalEditPageState();
 }
 
-class _GoalPageState extends State<GoalPage> {
+class _GoalEditPageState extends State<GoalEditPage> {
+  final _todaytextController = TextEditingController();
+  final _weektextController = TextEditingController();
+  final _yeartextController = TextEditingController();
 
   String today =" ";
   String week = "";
   String year="";
   String nickname = "";
   String dream = "";
+  String todayHint = "";
+  String weekHint = "";
+  String yearHint = "";
   FirebaseUser user ;
   bool _todayBool = false;
   bool _weekBool = false;
   bool _yearBool = false;
+
+
+  void _todayhandleSubmitted(String text) {
+    todayUpdate(text);
+    if(this.mounted) {
+      setState(() {
+        today = text;
+      });
+    }
+    _todaytextController.clear();
+  }
+  void _weekhandleSubmitted(String text) {
+    weekUpdate(text);
+    if(this.mounted) {
+      setState(() {
+        week = text;
+      });
+    }
+
+    _weektextController.clear();
+  }
+  void _yearhandleSubmitted(String text) {
+    yearUpdate(text);
+    if(this.mounted) {
+      setState(() {
+        year = text;
+      });
+    }
+
+    _yeartextController.clear();
+  }
+
+
+
+  Widget _todaybuildTextComposer(double width, double height) {
+    return  Container(
+      width: width,
+      height: height,
+      child:  TextField(
+        controller: _todaytextController,
+        onSubmitted: _todayhandleSubmitted,
+        decoration:  InputDecoration(
+            filled: true,
+            fillColor: HexColor("#fff7ef"),
+            border: InputBorder.none,
+            hintText: todayHint),
+      ),
+    );
+  }
+
+  Widget _weekbuildTextComposer(double width, double height)  {
+    return  Container(
+      width: width,
+      height: height,
+      child:  TextField(
+        controller: _weektextController,
+        onSubmitted: _weekhandleSubmitted,
+        decoration:  InputDecoration(
+            filled: true,
+            fillColor: HexColor("#fff7ef"),
+            border: InputBorder.none,
+            hintText: weekHint),
+      ),
+    );
+  }
+
+  Widget _yearbuildTextComposer(double width, double height)  {
+    return  Container(
+      width: width,
+      height: height,
+      child:  TextField(
+        controller: _yeartextController,
+        onSubmitted: _yearhandleSubmitted,
+        decoration:  InputDecoration(
+            filled: true,
+            fillColor: HexColor("#fff7ef"),
+            border: InputBorder.none,
+            hintText: yearHint),
+      ),
+    );
+  }
+
 
   Future<String> getUser () async {
     user = await FirebaseAuth.instance.currentUser();
@@ -43,9 +131,13 @@ class _GoalPageState extends State<GoalPage> {
           _todayBool = snapshot.data["todaycheck"];
           _weekBool = snapshot.data["weekcheck"];
           _yearBool = snapshot.data["yearcheck"];
+          todayHint = snapshot.data["today"];
+          weekHint = snapshot.data["week"];
+          yearHint = snapshot.data["year"];
         });
       }
     });
+
 
   }
 
@@ -71,13 +163,52 @@ class _GoalPageState extends State<GoalPage> {
   }
 
 
-  Future<void> _editChecker() async {
+  Future<void> _todayCheckUpdate(bool check) async {
+    final user = await FirebaseAuth.instance.currentUser();
+    return Firestore.instance.collection('loginInfo').document(user.email).updateData(<String, dynamic>{
+      'todaycheck' : check,
+    });
+  }
+
+  Future<void> _weekCheckUpdate(bool check) async {
+    final user = await FirebaseAuth.instance.currentUser();
+    return Firestore.instance.collection('loginInfo').document(user.email).updateData(<String, dynamic>{
+      'weekcheck' : check,
+    });
+  }
+
+  Future<void> _yearCheckUpdate(bool check) async {
+    final user = await FirebaseAuth.instance.currentUser();
+    return Firestore.instance.collection('loginInfo').document(user.email).updateData(<String, dynamic>{
+      'yearcheck' : check,
+    });
+  }
+
+  Future<void> _todayChecker(bool check) async {
     final user = await FirebaseAuth.instance.currentUser();
 
     if(user.email == widget.email){
-      return  Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => GoalEditPage(email: widget.email)));
+      return  _todayCheck(check);
+    }
+    else
+      return null;
+  }
+
+  Future<void> _weekChecker(bool check) async {
+    final user = await FirebaseAuth.instance.currentUser();
+
+    if(user.email == widget.email){
+      return  _weekCheck(check);
+    }
+    else
+      return null;
+  }
+
+  Future<void> _yearChecker(bool check) async {
+    final user = await FirebaseAuth.instance.currentUser();
+
+    if(user.email == widget.email){
+      return  _yearCheck(check);
     }
     else
       return null;
@@ -91,11 +222,39 @@ class _GoalPageState extends State<GoalPage> {
   }
 
 
+  void _todayCheck(bool check){
+    _todayCheckUpdate(check);
+    if(this.mounted) {
+      setState(() {
+        _todayBool = check;
+      });
+    }
+  }
+
+  void _weekCheck(bool check){
+    _weekCheckUpdate(check);
+    if(this.mounted) {
+      setState(() {
+        _weekBool = check;
+      });
+    }
+  }
+
+  void _yearCheck(bool check){
+    _yearCheckUpdate(check);
+    if(this.mounted) {
+      setState(() {
+        _yearBool = check;
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData = MediaQuery.of(context);
-
     getUser();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -104,16 +263,16 @@ class _GoalPageState extends State<GoalPage> {
           AppBar(
               backgroundColor: HexColor("#e9f4eb"),
               centerTitle: true,
-              actions: [
-                IconButton(
+              leading: IconButton(
                   icon: Icon(
-                    Icons.edit,
-                    color: HexColor("#fbb359"),
+                    Icons.arrow_back,
                   ),
                   onPressed: (){
-                    _editChecker();
-                  },
-                )
+                    Navigator.of(context).pop();
+                  }
+              ),
+              actions: [
+
               ],
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -241,41 +400,16 @@ class _GoalPageState extends State<GoalPage> {
                             Theme(
                               data: ThemeData(unselectedWidgetColor: HexColor("#fab259")),
                               child: Checkbox(
-                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                checkColor: Colors.white,
-                                activeColor: HexColor("#fab259"),
-                                value: _todayBool,
-                                onChanged: null,
+                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  checkColor: Colors.white,
+                                  activeColor: HexColor("#fab259"),
+                                  value: _todayBool,
+                                  onChanged: _todayChecker
                               ),
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            Container(
-                                width: queryData.size.width*0.85,
-                                height: queryData.size.height*0.04,
-                                decoration: BoxDecoration(
-                                  color: HexColor("#fff7ef"),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(10, 0,0,0),
-                                    ),
-                                    Text(
-                                      today,
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ],
-                                )
-                            ),
-                          ],
-                        ),
+                        _todaybuildTextComposer(queryData.size.width*0.85, queryData.size.height*0.04),
                         SizedBox(height: 7),
                         Row(
                           children: [
@@ -293,37 +427,12 @@ class _GoalPageState extends State<GoalPage> {
                                   checkColor: Colors.white,
                                   activeColor: HexColor("#fab259"),
                                   value: _weekBool,
-                                  onChanged: null
+                                  onChanged: _weekChecker
                               ),
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            Container(
-                                width: queryData.size.width*0.85,
-                                height: queryData.size.height*0.04,
-                                decoration: BoxDecoration(
-                                  color: HexColor("#fff7ef"),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(10, 0,0,0),
-                                    ),
-                                    Text(
-                                      week,
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ],
-                                )
-                            ),
-                          ],
-                        ),
+                        _weekbuildTextComposer(queryData.size.width*0.85, queryData.size.height*0.04),
                         SizedBox(height: 7),
                         Row(
                           children: [
@@ -337,41 +446,16 @@ class _GoalPageState extends State<GoalPage> {
                             Theme(
                               data: ThemeData(unselectedWidgetColor: HexColor("#fab259")),
                               child: Checkbox(
-                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                checkColor: Colors.white,
-                                activeColor: HexColor("#fab259"),
-                                value: _yearBool,
-                                onChanged: null,
+                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  checkColor: Colors.white,
+                                  activeColor: HexColor("#fab259"),
+                                  value: _yearBool,
+                                  onChanged: _yearChecker
                               ),
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            Container(
-                                width: queryData.size.width*0.85,
-                                height: queryData.size.height*0.04,
-                                decoration: BoxDecoration(
-                                  color: HexColor("#fff7ef"),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(10, 0,0,0),
-                                    ),
-                                    Text(
-                                      year,
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ],
-                                )
-                            ),
-                          ],
-                        ),
+                        _yearbuildTextComposer(queryData.size.width*0.85, queryData.size.height*0.04),
                       ],
                     ),
                   ),

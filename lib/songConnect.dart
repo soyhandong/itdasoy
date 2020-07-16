@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:itda/readStory.dart';
-import 'package:itda/writeStory.dart';
+import 'package:itda/writeSong.dart';
 
-class StoryConnect extends StatefulWidget {
+class SongConnect extends StatefulWidget {
   @override
-  _StoryConnectState createState() => _StoryConnectState();
+  _SongConnectState createState() => _SongConnectState();
 }
 
-class _StoryConnectState extends State<StoryConnect> {
+class _SongConnectState extends State<SongConnect> {
   Firestore _firestore = Firestore.instance;
   FirebaseUser user ;
   String email="이메일";
@@ -56,7 +56,7 @@ class _StoryConnectState extends State<StoryConnect> {
               onPressed: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => WriteStory()));
+                    MaterialPageRoute(builder: (context) => WriteSong()));
               },
             )
           ],
@@ -139,7 +139,7 @@ class _StoryConnectState extends State<StoryConnect> {
                     child: GestureDetector(
                       child: _wPBuildConnectItem('assets/itda_orange.png', '글쓰기'),
                       onTap: () => {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => WriteStory())),
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => WriteSong())),
                       },
                     ),
                   ),

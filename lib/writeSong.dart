@@ -26,12 +26,12 @@ enum AudioState { isPlaying, isPaused, isStopped, isRecording, isRecordingPaused
 final exampleAudioFilePath = "https://file-examples.com/wp-content/uploads/2017/11/file_example_MP3_700KB.mp3";
 final albumArtPath = "https://file-examples.com/wp-content/uploads/2017/10/file_example_PNG_500kB.png";
 
-class SongeConnect extends StatefulWidget {
+class WriteSong extends StatefulWidget {
   @override
-  _SongeConnectState createState() => _SongeConnectState();
+  _WriteSongState createState() => _WriteSongState();
 }
 
-class _SongeConnectState extends State<SongeConnect> {
+class _WriteSongState extends State<WriteSong> {
   var ssubject, scontent, srecord;
   static int sindex = 1;
   String sindexing = "$sindex";
@@ -718,7 +718,7 @@ class _SongeConnectState extends State<SongeConnect> {
                 ),
                 Container(
                   padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                  height: 190.0,
+                  height: 200.0,
                   decoration: BoxDecoration(
                       color: const Color(0xffe9f4eb)
                   ),

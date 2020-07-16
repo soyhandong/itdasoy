@@ -1,8 +1,10 @@
 //https://github.com/rajayogan/flutterui-curveddesigns
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'poemConnect.dart';
+import 'package:itda/poemConnect.dart';
+import 'package:itda/songConnect.dart';
 import 'package:itda/storyConnect.dart';
+import 'package:itda/imagepic.dart';
 
 class ConnectHeart extends StatefulWidget {
   @override
@@ -137,7 +139,7 @@ class _ConnectHeartState extends State<ConnectHeart> {
                   onTap: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => PoemConnect()));
+                        MaterialPageRoute(builder: (context) => SongConnect()));
                   },
                 ),
               ],
