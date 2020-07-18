@@ -2,10 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:itda/help.dart';
 import 'package:itda/readStory.dart';
 import 'package:itda/writeStory.dart';
+import 'package:flutter/rendering.dart';
 
 class StoryConnect extends StatefulWidget {
+  String sindexing;
+  StoryConnect({Key key,@required this.sindexing}) : super(key: key);
   @override
   _StoryConnectState createState() => _StoryConnectState();
 }
@@ -34,11 +38,13 @@ class _StoryConnectState extends State<StoryConnect> {
       });
     });
   }
+
   @override
   void initState() {
     super.initState();
     getUser();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +62,7 @@ class _StoryConnectState extends State<StoryConnect> {
               onPressed: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => WriteStory()));
+                    MaterialPageRoute(builder: (context) => HelpPage()));
               },
             )
           ],
@@ -186,12 +192,13 @@ class _StoryConnectState extends State<StoryConnect> {
     );
   }
   Widget _slist () {
-    //final srecord = SRecord.fromSnapshot(data);
     return Expanded(
       child: StreamBuilder<QuerySnapshot>(
           stream: Firestore.instance.collection('storyList').snapshots(),
           builder: (context, snapshot) {
+            //if (!snapshot.hasData) return LinearProgressIndicator();
             final items = snapshot.data.documents;
+
             return ListView.builder(
               itemCount: items.length,
               itemBuilder: (context, index) {
@@ -199,8 +206,8 @@ class _StoryConnectState extends State<StoryConnect> {
                 return InkWell(
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: AssetImage(
-                          'assets/Itda_black.png'),
+                      backgroundImage: AssetImage('assets/user.png'),
+                      backgroundColor: Colors.white,
                     ),
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -223,7 +230,7 @@ class _StoryConnectState extends State<StoryConnect> {
                     subtitle: Text(item['ssubject'],),
                     trailing: Icon(Icons.keyboard_arrow_right),
                     onTap: () => {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ReadStory())),
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ReadStory(sindexing: item['sindexing'],))),
                     },
                     //selected: true,
                   ),
@@ -236,7 +243,8 @@ class _StoryConnectState extends State<StoryConnect> {
   }
 }
 
-/*
+
+
 class SRecord{
   final String nickname;
   final String school;
@@ -273,4 +281,3 @@ class SRecord{
       : this.fromMap(snapshot.data);
 
 }
-* */

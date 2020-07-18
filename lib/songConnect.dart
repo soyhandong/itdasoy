@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:itda/readStory.dart';
 import 'package:itda/writeSong.dart';
+import 'package:itda/help.dart';
 
 class SongConnect extends StatefulWidget {
   @override
@@ -56,7 +57,7 @@ class _SongConnectState extends State<SongConnect> {
               onPressed: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => WriteSong()));
+                    MaterialPageRoute(builder: (context) => HelpPage()));
               },
             )
           ],
@@ -109,7 +110,7 @@ class _SongConnectState extends State<SongConnect> {
                   ),
                   Container(
                     child: Text(
-                      '이야기로 마음을 잇다',
+                      '노래로 마음을 잇다',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
@@ -189,7 +190,7 @@ class _SongConnectState extends State<SongConnect> {
     //final srecord = SRecord.fromSnapshot(data);
     return Expanded(
       child: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('storyList').snapshots(),
+          stream: Firestore.instance.collection('songList').snapshots(),
           builder: (context, snapshot) {
             final items = snapshot.data.documents;
             return ListView.builder(

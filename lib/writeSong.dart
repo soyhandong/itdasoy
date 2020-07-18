@@ -7,6 +7,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data' show Uint8List;
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -17,9 +18,12 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:itda/writePoem.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:path/path.dart' as p;
+import 'package:file_picker/file_picker.dart';
+
+import 'package:itda/help.dart';
 
 enum Media { file, buffer, asset, stream, remoteExampleFile, }
 enum AudioState { isPlaying, isPaused, isStopped, isRecording, isRecordingPaused, }
@@ -85,6 +89,13 @@ class _WriteSongState extends State<WriteSong> {
   bool _isAudioPlayer = false;
 
   double _duration = null;
+
+  File _music1;
+
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  FirebaseUser _audioUser;
+  FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+  String _audioURL1 = "";
 
   Future<void> _initializeExample(bool withUI) async {
     await playerModule.closeAudioSession();
@@ -177,6 +188,7 @@ class _WriteSongState extends State<WriteSong> {
 
       Directory tempDir = await getTemporaryDirectory();
       String path = '${tempDir.path}/${recorderModule.slotNo}-flutter_sound${ext[_codec.index]}';
+
       await recorderModule.startRecorder(
         toFile: path,
         codec: _codec,
@@ -196,7 +208,6 @@ class _WriteSongState extends State<WriteSong> {
           });
         }
       });
-
       this.setState(() {
         this._isRecording = true;
         this._path[_codec.index] = path;
@@ -420,136 +431,6 @@ class _WriteSongState extends State<WriteSong> {
     print('seekToPlayer');
   }
 
-  Widget makeDropdowns(BuildContext context) {
-    final mediaDropdown = Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(right: 16.0),
-          child: Text('Media:'),
-        ),
-        DropdownButton<Media>(
-          value: _media,
-          onChanged: (newMedia) {
-            if (newMedia == Media.remoteExampleFile) _codec = Codec.mp3; // Actually this is the only example we use in this example
-            _media = newMedia;
-            getDuration();
-            setState(() {});
-          },
-          items: <DropdownMenuItem<Media>>[
-            DropdownMenuItem<Media>(
-              value: Media.file,
-              child: Text('File'),
-            ),
-            DropdownMenuItem<Media>(
-              value: Media.buffer,
-              child: Text('Buffer'),
-            ),
-            DropdownMenuItem<Media>(
-              value: Media.asset,
-              child: Text('Asset'),
-            ),
-            DropdownMenuItem<Media>(
-              value: Media.remoteExampleFile,
-              child: Text('Remote Example File'),
-            ),
-          ],
-        ),
-      ],
-    );
-
-    final codecDropdown = Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(right: 16.0),
-          child: Text('Codec:'),
-        ),
-        DropdownButton<Codec>(
-          value: _codec,
-          onChanged: (newCodec) {
-            setCodec(newCodec);
-            _codec = newCodec;
-            getDuration();
-            setState(() {});
-          },
-          items: <DropdownMenuItem<Codec>>[
-            DropdownMenuItem<Codec>(
-              value: Codec.aacADTS,
-              child: Text('AAC/ADTS'),
-            ),
-            DropdownMenuItem<Codec>(
-              value: Codec.opusOGG,
-              child: Text('Opus/OGG'),
-            ),
-            DropdownMenuItem<Codec>(
-              value: Codec.opusCAF,
-              child: Text('Opus/CAF'),
-            ),
-            DropdownMenuItem<Codec>(
-              value: Codec.mp3,
-              child: Text('MP3'),
-            ),
-            DropdownMenuItem<Codec>(
-              value: Codec.vorbisOGG,
-              child: Text('Vorbis/OGG'),
-            ),
-            DropdownMenuItem<Codec>(
-              value: Codec.pcm16,
-              child: Text('PCM16'),
-            ),
-            DropdownMenuItem<Codec>(
-              value: Codec.pcm16WAV,
-              child: Text('PCM16/WAV'),
-            ),
-            DropdownMenuItem<Codec>(
-              value: Codec.pcm16AIFF,
-              child: Text('PCM16/AIFF'),
-            ),
-            DropdownMenuItem<Codec>(
-              value: Codec.pcm16CAF,
-              child: Text('PCM16/CAF'),
-            ),
-            DropdownMenuItem<Codec>(
-              value: Codec.flac,
-              child: Text('FLAC'),
-            ),
-            DropdownMenuItem<Codec>(
-              value: Codec.aacMP4,
-              child: Text('AAC/MP4'),
-            ),
-            DropdownMenuItem<Codec>(
-              value: Codec.amrNB,
-              child: Text('AMR-NB'),
-            ),
-            DropdownMenuItem<Codec>(
-              value: Codec.amrWB,
-              child: Text('AMR-WB'),
-            ),
-
-          ],
-        ),
-      ],
-    );
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: mediaDropdown,
-          ),
-          codecDropdown,
-        ],
-      ),
-    );
-  }
-
   void Function() onPauseResumePlayerPressed() {
     if (playerModule == null) return null;
     if (playerModule.isPaused || playerModule.isPlaying) {
@@ -613,16 +494,26 @@ class _WriteSongState extends State<WriteSong> {
     });
   }
 
-  void Function(bool) audioPlayerSwitchChanged() {
-    if ((!playerModule.isStopped) || (!recorderModule.isStopped)) return null;
-    return ((newVal) async {
-      try {
-        await _initializeExample(newVal);
-        setState(() {});
-      } catch (err) {
-        print(err);
-      }
+  void musicUpload() async {
+    File music1 = _media as File;
+    DateTime nowtime = new DateTime.now();
+    if(music1 == null) return;
+    setState((){
+      _music1 = music1;
     });
+    StorageReference storageReference = _firebaseStorage.ref().child("songfile/${_audioUser.uid}1_$nowtime");
+    StorageUploadTask storageUploadTask = storageReference.putFile(_music1);
+    StorageTaskSnapshot downloadUrl = (await storageUploadTask.onComplete);
+    String url = (await downloadUrl.ref.getDownloadURL());
+    print('URL is $url');
+    _audioURL1 = url;
+/*
+    await storageUploadTask.onComplete;
+    String downloadURL = await storageReference.getDownloadURL();
+    setState(() {
+      _audioURL1 = downloadURL;
+    });
+* */
   }
 
   @override
@@ -643,7 +534,7 @@ class _WriteSongState extends State<WriteSong> {
               onPressed: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => WritePoem()));
+                    MaterialPageRoute(builder: (context) => HelpPage()));
               },
             )
           ],
@@ -703,7 +594,7 @@ class _WriteSongState extends State<WriteSong> {
                       ),
                       Container(
                         child: Text(
-                          '시로 마음을 잇다',
+                          '노래로 마음을 잇다',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
@@ -726,7 +617,10 @@ class _WriteSongState extends State<WriteSong> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      _isRecording ? LinearProgressIndicator(value: 100.0 / 160.0 * (this._dbLevel ?? 1) / 100, valueColor: AlwaysStoppedAnimation<Color>(Colors.green), backgroundColor: Colors.red) : Container(),
+                      _isRecording ? LinearProgressIndicator(value: 100.0 / 160.0 * (this._dbLevel ?? 1) / 100,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                          backgroundColor: Colors.red)
+                          : Container(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -992,7 +886,7 @@ class _WriteSongState extends State<WriteSong> {
                         child: GestureDetector(
                           child: _wPBuildConnectItem('assets/itda_orange.png','잇기(올리기)'),
                           onTap: () async{
-                            await Firestore.instance.collection('storyList').document(sindexing).setData({'email':email, 'nickname':nickname, 'school':school, 'clas':clas, 'grade':grade, 'ssubject':ssubject, 'scontent':scontent, 'srecord': srecord, 'sindexing':sindexing});
+                            await Firestore.instance.collection('songList').document(sindexing).setData({'email':email, 'nickname':nickname, 'school':school, 'clas':clas, 'grade':grade, 'ssubject':ssubject, 'scontent':scontent, 'srecord': srecord, 'sindexing':sindexing});
                             email = ''; nickname = ''; school = ''; clas = ''; grade = ''; ssubject = ''; scontent = ''; srecord = ''; sindexing = '';
                             sindex = sindex + 1;
                             Navigator.pop(context);
@@ -1018,179 +912,10 @@ class _WriteSongState extends State<WriteSong> {
                     ],
                   ),
                 ),
-                /*
-                ListView(
-                  children: <Widget>[
-                    Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(top: 12.0, bottom: 16.0),
-                        child: Text(
-                          this._recorderTxt,
-                          style: TextStyle(
-                            fontSize: 35.0,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      _isRecording ? LinearProgressIndicator(value: 100.0 / 160.0 * (this._dbLevel ?? 1) / 100, valueColor: AlwaysStoppedAnimation<Color>(Colors.green), backgroundColor: Colors.red) : Container(),
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            width: 56.0,
-                            height: 50.0,
-                            child: ClipOval(
-                              child: FlatButton(
-                                onPressed: onStartRecorderPressed(),
-                                padding: EdgeInsets.all(8.0),
-                                child: Image(
-                                  image: recorderAssetImage(),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 56.0,
-                            height: 50.0,
-                            child: ClipOval(
-                              child: FlatButton(
-                                onPressed: onPauseResumeRecorderPressed(),
-                                disabledColor: Colors.white,
-                                padding: EdgeInsets.all(8.0),
-                                child: Image(
-                                  width: 36.0,
-                                  height: 36.0,
-                                  image: AssetImage(onPauseResumeRecorderPressed() != null ? 'res/icons/ic_pause.png' : 'res/icons/ic_pause_disabled.png'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                      ),
-                    ]),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(top: 12.0, bottom: 16.0),
-                          child: Text(
-                            this._playerTxt,
-                            style: TextStyle(
-                              fontSize: 35.0,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Container(
-                              width: 56.0,
-                              height: 50.0,
-                              child: ClipOval(
-                                child: FlatButton(
-                                  onPressed: onStartPlayerPressed(),
-                                  disabledColor: Colors.white,
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Image(
-                                    image: AssetImage(onStartPlayerPressed() != null ? 'res/icons/ic_play.png' : 'res/icons/ic_play_disabled.png'),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 56.0,
-                              height: 50.0,
-                              child: ClipOval(
-                                child: FlatButton(
-                                  onPressed: onPauseResumePlayerPressed(),
-                                  disabledColor: Colors.white,
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Image(
-                                    width: 36.0,
-                                    height: 36.0,
-                                    image: AssetImage(onPauseResumePlayerPressed() != null ? 'res/icons/ic_pause.png' : 'res/icons/ic_pause_disabled.png'),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 56.0,
-                              height: 50.0,
-                              child: ClipOval(
-                                child: FlatButton(
-                                  onPressed: onStopPlayerPressed(),
-                                  disabledColor: Colors.white,
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Image(
-                                    width: 28.0,
-                                    height: 28.0,
-                                    image: AssetImage(onStopPlayerPressed() != null ? 'res/icons/ic_stop.png' : 'res/icons/ic_stop_disabled.png'),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                        ),
-                        Container(
-                            height: 30.0,
-                            child: Slider(
-                                value: min(sliderCurrentPosition, maxDuration),
-                                min: 0.0,
-                                max: maxDuration,
-                                onChanged: (double value) async {
-                                  await playerModule.seekToPlayer(Duration(milliseconds: value.toInt()));
-                                },
-                                divisions: maxDuration == 0.0 ? 1 : maxDuration.toInt())),
-                        Container(
-                          height: 30.0,
-                          child: Text(_duration != null ? "Duration: $_duration sec." : ''),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                * */
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _recordingItem(String rimgPath, String rlinkName) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            width: 25,
-            height: 25,
-            child: Image.asset(rimgPath),
-            //color: Colors.white,
-          ),
-          Container(
-            height: 3.0,
-          ),
-          Container(
-            child: Text(
-              rlinkName,
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w700,
-                fontFamily: "Arita-dotum-_OTF",
-                fontStyle: FontStyle.normal,
-                fontSize: 9,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

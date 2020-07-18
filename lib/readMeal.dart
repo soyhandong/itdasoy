@@ -9,12 +9,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:itda/mealList.dart';
 import 'package:itda/help.dart';
 
-class MakeMeal extends StatefulWidget {
+class ReadMeal extends StatefulWidget {
+  String mindexing;
+  ReadMeal({Key key,@required this.mindexing}) : super(key: key);
   @override
-  _MakeMealState createState() => _MakeMealState();
+  _ReadMealState createState() => _ReadMealState();
 }
 
-class _MakeMealState extends State<MakeMeal> {
+class _ReadMealState extends State<ReadMeal> {
   File _image1, _image2, _image3, _image4, _image5, _image6;
   final _formKey = GlobalKey<FormState>();
   bool tansu = false;
@@ -24,7 +26,7 @@ class _MakeMealState extends State<MakeMeal> {
   bool moogi = false;
   bool water = false;
 
-  var pic1, pic2, pic3, pic4, pic5, pic6,
+  String pic1, pic2, pic3, pic4, pic5, pic6,
       pic1n, pic2n, pic3n, pic4n, pic5n, pic6n;
   static int mindex = 1;
   String mindexing = "$mindex";
@@ -62,6 +64,41 @@ class _MakeMealState extends State<MakeMeal> {
   String _ImageURL4 = "";
   String _ImageURL5 = "";
   String _ImageURL6 = "";
+
+  Future<String> getMeal () async {
+    _imgUser = await FirebaseAuth.instance.currentUser();
+    DocumentReference documentReference =  Firestore.instance.collection("mealList").document(widget.mindexing);
+    await documentReference.get().then<dynamic>(( DocumentSnapshot snapshot) async {
+      setState(() {
+        _image1 = snapshot.data["_image1"];
+        _image2 = snapshot.data["_image2"];
+        _image3 = snapshot.data["_image3"];
+        _image4 = snapshot.data["_image4"];
+        _image5 = snapshot.data["_image5"];
+        _image6 = snapshot.data["_image6"];
+        tansu = snapshot.data["tansu"];
+        danback = snapshot.data["danback"];
+        jibang = snapshot.data["jibang"];
+        vitamin = snapshot.data["vitamin"];
+        moogi = snapshot.data["moogi"];
+        water = snapshot.data["water"];
+        pic1 = snapshot.data["pic1"];
+        pic2 = snapshot.data["pic2"];
+        pic3 = snapshot.data["pic3"];
+        pic4 = snapshot.data["pic4"];
+        pic5 = snapshot.data["pic5"];
+        pic6 = snapshot.data["pic6"];
+        pic1n = snapshot.data["pic1n"];
+        pic2n = snapshot.data["pic2n"];
+        pic3n = snapshot.data["pic3n"];
+        pic4n = snapshot.data["pic4n"];
+        pic5n = snapshot.data["pic5n"];
+        pic6n = snapshot.data["pic6n"];
+        mindexing = snapshot.data["mindexing"];
+      });
+    });
+  }
+
 
   @override
   void initState() {
@@ -210,10 +247,10 @@ class _MakeMealState extends State<MakeMeal> {
                       decoration: BoxDecoration(
                         color: Color(0xfff2f2f2),
                         borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10.0),
-                            topRight: Radius.circular(10.0),
-                            bottomRight: Radius.circular(10.0),
-                            bottomLeft: Radius.circular(10.0),
+                          topLeft: Radius.circular(10.0),
+                          topRight: Radius.circular(10.0),
+                          bottomRight: Radius.circular(10.0),
+                          bottomLeft: Radius.circular(10.0),
                         ),
                       ),
                       child: Column(
@@ -525,17 +562,6 @@ class _MakeMealState extends State<MakeMeal> {
                           }
                         });
                       },
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return '이름쓰기';
-                        } else
-                          return null;
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: '이름쓰기',
-                        //labelText: "Enter your username",
-                      ),
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -592,17 +618,6 @@ class _MakeMealState extends State<MakeMeal> {
                           }
                         });
                       },
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return '이름쓰기';
-                        } else
-                          return null;
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: '이름쓰기',
-                        //labelText: "Enter your username",
-                      ),
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white,

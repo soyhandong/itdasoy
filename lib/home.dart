@@ -7,8 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'help.dart';
 import 'connectHeart.dart';
-import 'makeMeal.dart';
 import 'package:flutter/services.dart';
+import 'package:itda/connectMeal.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -289,7 +289,7 @@ class _HomePageState extends State<HomePage> {
                   height: 50.0,
                   child: RaisedButton(
                       onPressed: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MakeMeal()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ConnectMeal()));
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),

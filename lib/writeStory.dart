@@ -1,8 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:itda/writePoem.dart';
+import 'package:itda/help.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:itda/readStory.dart';
 
 class WriteStory extends StatefulWidget {
@@ -42,7 +44,6 @@ class _WriteStoryState extends State<WriteStory> {
 
   @override
   void initState() {
-
     super.initState();
     getUser();
   }
@@ -64,7 +65,7 @@ class _WriteStoryState extends State<WriteStory> {
               onPressed: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => WritePoem()));
+                    MaterialPageRoute(builder: (context) => HelpPage()));
               },
             )
           ],

@@ -3,14 +3,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:itda/storyConnect.dart';
+import 'package:itda/help.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ReadStory extends StatefulWidget {
+  String sindexing;
+  ReadStory({Key key,@required this.sindexing}) : super(key: key);
   @override
   _ReadStoryState createState() => _ReadStoryState();
 }
 
 class _ReadStoryState extends State<ReadStory> {
-  var ssubject, scontent, srecord;
   Firestore _firestore = Firestore.instance;
   FirebaseUser user;
   String email="이메일";
@@ -35,11 +39,37 @@ class _ReadStoryState extends State<ReadStory> {
       });
     });
   }
+  FirebaseUser suser;
+  String ssubject = "";
+  String scontent = "";
+  String srecord = "";
+  String sindexing = "";
+
+  Future<String> getStory () async {
+    suser = await FirebaseAuth.instance.currentUser();
+    DocumentReference documentReference =  Firestore.instance.collection("storyList").document(widget.sindexing);
+    await documentReference.get().then<dynamic>(( DocumentSnapshot snapshot) async {
+      setState(() {
+        /*
+        email =snapshot.data["email"];
+        nickname =snapshot.data["nickname"];
+        school = snapshot.data["schoolname"];
+        grade = snapshot.data["grade"];
+        clas = snapshot.data["class"];
+        * */
+        ssubject = snapshot.data["ssubject"];
+        scontent = snapshot.data["scontent"];
+        srecord = snapshot.data["srecord"];
+        sindexing = snapshot.data["sindexing"];
+      });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     getUser();
+    getStory();
   }
 
   @override
@@ -59,7 +89,7 @@ class _ReadStoryState extends State<ReadStory> {
               onPressed: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => StoryConnect()));
+                    MaterialPageRoute(builder: (context) => HelpPage()));
               },
             )
           ],
@@ -221,7 +251,7 @@ class _ReadStoryState extends State<ReadStory> {
                               decoration: BoxDecoration(
                                   color: const Color(0x69e9f4eb)
                               ),
-                              child: Text('wow'),
+                              child: Text(ssubject),
                             ),
                             SizedBox(height: 10.0,),
                             Text('나의 느낀점(다짐)',
@@ -239,7 +269,7 @@ class _ReadStoryState extends State<ReadStory> {
                               decoration: BoxDecoration(
                                   color: const Color(0x69e9f4eb)
                               ),
-                              child: Text('wow'),
+                              child: Text(scontent),
                             ),
                             SizedBox(height: 10.0,),
                             Text('녹음파일',
@@ -257,7 +287,7 @@ class _ReadStoryState extends State<ReadStory> {
                               decoration: BoxDecoration(
                                   color: const Color(0x69e9f4eb)
                               ),
-                              child: Text('wow'),
+                              child: Text(srecord),
                             ),
                           ],
                         ),
