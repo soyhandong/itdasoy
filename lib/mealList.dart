@@ -30,6 +30,7 @@ class _MealListState extends State<MealList> {
     DocumentReference documentReference =  Firestore.instance.collection("loginInfo").document(user.email);
     await documentReference.get().then<dynamic>(( DocumentSnapshot snapshot) async {
       setState(() {
+        email =snapshot.data["email"];
         nickname =snapshot.data["nickname"];
         school = snapshot.data["schoolname"];
         grade = snapshot.data["grade"];
@@ -268,7 +269,14 @@ class _MealListState extends State<MealList> {
                         ),
                       ],
                     ),
-                    subtitle: Text(item['mindexing'],),
+                    subtitle: Row(
+                      children: <Widget>[
+                        Text(item['grade']),
+                        Text('학년 '),
+                        Text(item['clas']),
+                        Text('반'),
+                      ],
+                    ),
                     trailing: Icon(Icons.keyboard_arrow_right),
                     onTap: () => {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => ReadMeal(mindexing: item['mindexing']))),

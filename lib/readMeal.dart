@@ -51,6 +51,7 @@ class _ReadMealState extends State<ReadMeal> {
     DocumentReference documentReference =  Firestore.instance.collection("loginInfo").document(user.email);
     await documentReference.get().then<dynamic>(( DocumentSnapshot snapshot) async {
       setState(() {
+        email =snapshot.data["email"];
         nickname =snapshot.data["nickname"];
         school = snapshot.data["schoolname"];
         grade = snapshot.data["grade"];
@@ -367,19 +368,9 @@ class _ReadMealState extends State<ReadMeal> {
                         ),
                       ),
                       child: GestureDetector(
-                        child: _wPBuildConnectItem('assets/itda_orange.png', '잇기(올리기)'),
+                        child: _wPBuildConnectItem('assets/itda_orange.png', '목록으로 돌아가기'),
                         onTap: () async{
-                          await Firestore.instance.collection('mealList').document(mindexing)
-                              .setData({'email':email, 'nickname':nickname, 'school':school, 'clas':clas, 'grade':grade, 'mindexing':mindexing,
-                            'tansu':tansu, 'danback':danback, 'jibang': jibang, 'vitamin' : vitamin, 'moogi' : moogi, 'water' : water,
-                            'pic1' : _ImageURL1, 'pic2' : _ImageURL2, 'pic3' : _ImageURL3, 'pic4' : _ImageURL4, 'pic5' : _ImageURL5, 'pic6' : _ImageURL6,
-                            'pic1n' : pic1n, 'pic2n' : pic2n, 'pic3n' : pic3n, 'pic4n' : pic4n, 'pic5n' : pic5n, 'pic6n' : pic6n,});
-                          email = ''; nickname = ''; school = ''; clas = ''; grade = ''; mindexing = '';
-                          tansu = false; danback = false; jibang = false; vitamin = false; moogi = false; water = false;
-                          pic1 = ''; pic2 = ''; pic3 = ''; pic4 = ''; pic5 = ''; pic6 = '';
-                          pic1n = ''; pic2n = ''; pic3n = ''; pic4n = ''; pic5n = ''; pic6n = '';
-                          mindex = mindex + 1;
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MealList()));
+                          Navigator.pop(context);
                         },
                       ),
                     ),
@@ -392,97 +383,6 @@ class _ReadMealState extends State<ReadMeal> {
         ),
       ),
     );
-  }
-  void getGalleryImage1() async {
-    File image1 = await ImagePicker.pickImage(source: ImageSource.gallery);
-    DateTime nowtime = new DateTime.now();
-    //var image1 = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if(image1 == null) return;
-    setState(() {
-      _image1 = image1;
-    });
-    StorageReference storageReference = _firebaseStorage.ref().child("foodImg/${_imgUser.uid}1_$nowtime");
-    StorageUploadTask storageUploadTask = storageReference.putFile(_image1);
-    await storageUploadTask.onComplete;
-    String downloadURL = await storageReference.getDownloadURL();
-    setState(() {
-      _ImageURL1 = downloadURL;
-    });
-  }
-  void getGalleryImage2() async {
-    File image2 = await ImagePicker.pickImage(source: ImageSource.gallery);
-    DateTime nowtime = new DateTime.now();
-    if(image2 == null) return;
-    setState(() {
-      _image2 = image2;
-    });
-    StorageReference storageReference = _firebaseStorage.ref().child("foodImg/${_imgUser.uid}2_$nowtime");
-    StorageUploadTask storageUploadTask = storageReference.putFile(_image2);
-    await storageUploadTask.onComplete;
-    String downloadURL = await storageReference.getDownloadURL();
-    setState(() {
-      _ImageURL2 = downloadURL;
-    });
-  }
-  void getGalleryImage3() async {
-    File image3 = await ImagePicker.pickImage(source: ImageSource.gallery);
-    DateTime nowtime = new DateTime.now();
-    if(image3 == null) return;
-    setState(() {
-      _image3 = image3;
-    });
-    StorageReference storageReference = _firebaseStorage.ref().child("foodImg/${_imgUser.uid}3_$nowtime");
-    StorageUploadTask storageUploadTask = storageReference.putFile(_image3);
-    await storageUploadTask.onComplete;
-    String downloadURL = await storageReference.getDownloadURL();
-    setState(() {
-      _ImageURL3 = downloadURL;
-    });
-  }
-  void getGalleryImage4() async {
-    File image4 = await ImagePicker.pickImage(source: ImageSource.gallery);
-    DateTime nowtime = new DateTime.now();
-    if(image4 == null) return;
-    setState(() {
-      _image4 = image4;
-    });
-    StorageReference storageReference = _firebaseStorage.ref().child("foodImg/${_imgUser.uid}4_$nowtime");
-    StorageUploadTask storageUploadTask = storageReference.putFile(_image4);
-    await storageUploadTask.onComplete;
-    String downloadURL = await storageReference.getDownloadURL();
-    setState(() {
-      _ImageURL4 = downloadURL;
-    });
-  }
-  void getGalleryImage5() async {
-    File image5 = await ImagePicker.pickImage(source: ImageSource.gallery);
-    DateTime nowtime = new DateTime.now();
-    if(image5 == null) return;
-    setState(() {
-      _image5 = image5;
-    });
-    StorageReference storageReference = _firebaseStorage.ref().child("foodImg/${_imgUser.uid}5_$nowtime");
-    StorageUploadTask storageUploadTask = storageReference.putFile(_image5);
-    await storageUploadTask.onComplete;
-    String downloadURL = await storageReference.getDownloadURL();
-    setState(() {
-      _ImageURL5 = downloadURL;
-    });
-  }
-  void getGalleryImage6() async {
-    File image6 = await ImagePicker.pickImage(source: ImageSource.gallery);
-    DateTime nowtime = new DateTime.now();
-    if(image6 == null) return;
-    setState(() {
-      _image6 = image6;
-    });
-    StorageReference storageReference = _firebaseStorage.ref().child("foodImg/${_imgUser.uid}6_$nowtime");
-    StorageUploadTask storageUploadTask = storageReference.putFile(_image6);
-    await storageUploadTask.onComplete;
-    String downloadURL = await storageReference.getDownloadURL();
-    setState(() {
-      _ImageURL6 = downloadURL;
-    });
   }
   Widget _wPBuildConnectItem( String wPimgPath, String wPlinkName) {
     return Container(
@@ -602,30 +502,7 @@ class _ReadMealState extends State<ReadMeal> {
       children: <Widget>[
         Checkbox(
           value: nuVal,
-          onChanged: (bool value) {
-            setState(() {
-              switch(nuName){
-                case "탄수화물" :
-                  tansu = value;
-                  break;
-                case "단백질" :
-                  danback = value;
-                  break;
-                case "지방" :
-                  jibang = value;
-                  break;
-                case "비타민" :
-                  vitamin = value;
-                  break;
-                case "무기질" :
-                  moogi = value;
-                  break;
-                case "물" :
-                  water = value;
-                  break;
-              }
-            });
-          },
+          onChanged: null,
         ),
         Text(nuName,
           style: TextStyle(

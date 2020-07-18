@@ -44,6 +44,7 @@ class _MakeMealState extends State<MakeMeal> {
     DocumentReference documentReference =  Firestore.instance.collection("loginInfo").document(user.email);
     await documentReference.get().then<dynamic>(( DocumentSnapshot snapshot) async {
       setState(() {
+        email =snapshot.data["email"];
         nickname =snapshot.data["nickname"];
         school = snapshot.data["schoolname"];
         grade = snapshot.data["grade"];
