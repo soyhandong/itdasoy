@@ -8,8 +8,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:itda/mealList.dart';
 import 'package:itda/help.dart';
+import 'dart:math';
 
 class MakeMeal extends StatefulWidget {
+  String mealKey;
+  MakeMeal({Key key,@required this.mealKey}) : super(key: key);
   @override
   _MakeMealState createState() => _MakeMealState();
 }
@@ -28,6 +31,7 @@ class _MakeMealState extends State<MakeMeal> {
       pic1n, pic2n, pic3n, pic4n, pic5n, pic6n;
   static int mindex = 1;
   String mindexing = "$mindex";
+  String mealKey= "키값요";
 
   Firestore _firestore = Firestore.instance;
   FirebaseUser user;
@@ -327,12 +331,12 @@ class _MakeMealState extends State<MakeMeal> {
                       child: GestureDetector(
                         child: _wPBuildConnectItem('assets/itda_orange.png', '잇기(올리기)'),
                         onTap: () async{
-                          await Firestore.instance.collection('mealList').document(mindexing)
-                              .setData({'email':email, 'nickname':nickname, 'school':school, 'clas':clas, 'grade':grade, 'mindexing':mindexing,
+                          await Firestore.instance.collection('mealList').document(widget.mealKey)
+                              .setData({'email':email, 'nickname':nickname, 'school':school, 'clas':clas, 'grade':grade, 'mindexing':mindexing, 'mealKey':mealKey,
                             'tansu':tansu, 'danback':danback, 'jibang': jibang, 'vitamin' : vitamin, 'moogi' : moogi, 'water' : water,
                             'pic1' : _ImageURL1, 'pic2' : _ImageURL2, 'pic3' : _ImageURL3, 'pic4' : _ImageURL4, 'pic5' : _ImageURL5, 'pic6' : _ImageURL6,
                             'pic1n' : pic1n, 'pic2n' : pic2n, 'pic3n' : pic3n, 'pic4n' : pic4n, 'pic5n' : pic5n, 'pic6n' : pic6n,});
-                          email = ''; nickname = ''; school = ''; clas = ''; grade = ''; mindexing = '';
+                          email = ''; nickname = ''; school = ''; clas = ''; grade = ''; mindexing = ''; mealKey ='';
                           tansu = false; danback = false; jibang = false; vitamin = false; moogi = false; water = false;
                           pic1 = ''; pic2 = ''; pic3 = ''; pic4 = ''; pic5 = ''; pic6 = '';
                           pic1n = ''; pic2n = ''; pic3n = ''; pic4n = ''; pic5n = ''; pic6n = '';

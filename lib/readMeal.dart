@@ -10,8 +10,8 @@ import 'package:itda/mealList.dart';
 import 'package:itda/help.dart';
 
 class ReadMeal extends StatefulWidget {
-  String mindexing;
-  ReadMeal({Key key,@required this.mindexing}) : super(key: key);
+  String mealKey;
+  ReadMeal({Key key,@required this.mealKey}) : super(key: key);
   @override
   _ReadMealState createState() => _ReadMealState();
 }
@@ -45,6 +45,7 @@ class _ReadMealState extends State<ReadMeal> {
   String pic6n = "사진6";
   static int mindex = 1;
   String mindexing = "$mindex";
+  String mealKey="키값";
 
   Future<String> getUser () async {
     user = await FirebaseAuth.instance.currentUser();
@@ -73,7 +74,7 @@ class _ReadMealState extends State<ReadMeal> {
 
   Future<String> getMeal() async {
     _imgUser = await FirebaseAuth.instance.currentUser();
-    DocumentReference documentReference =  Firestore.instance.collection("mealList").document(widget.mindexing);
+    DocumentReference documentReference =  Firestore.instance.collection("mealList").document(widget.mealKey);
     await documentReference.get().then<dynamic>(( DocumentSnapshot snapshot) async {
       setState(() {
         _image1 = snapshot.data["_image1"];
@@ -101,6 +102,7 @@ class _ReadMealState extends State<ReadMeal> {
         pic5n = snapshot.data["pic5n"];
         pic6n = snapshot.data["pic6n"];
         mindexing = snapshot.data["mindexing"];
+        mealKey = snapshot.data["mealKey"];
       });
     });
   }

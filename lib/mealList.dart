@@ -8,8 +8,8 @@ import 'package:itda/readMeal.dart';
 import 'package:itda/readStory.dart';
 
 class MealList extends StatefulWidget {
-  String mindexing;
-  MealList({Key key,@required this.mindexing}) : super(key: key);
+  String mealKey;
+  MealList({Key key,@required this.mealKey}) : super(key: key);
   @override
   _MealListState createState() => _MealListState();
 }
@@ -279,7 +279,7 @@ class _MealListState extends State<MealList> {
                     ),
                     trailing: Icon(Icons.keyboard_arrow_right),
                     onTap: () => {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ReadMeal(mindexing: item['mindexing']))),
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ReadMeal(mealKey: item['mealKey']))),
                     },
                     //selected: true,
                   ),
