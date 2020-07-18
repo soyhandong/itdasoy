@@ -35,7 +35,6 @@ class _ReadMealState extends State<ReadMeal> {
   bool vitamin = false;
   bool moogi = false;
   bool water = false;
-
   String pic1, pic2, pic3, pic4, pic5, pic6;
   String pic1n = "사진1";
   String pic2n = "사진2";
@@ -228,18 +227,6 @@ class _ReadMealState extends State<ReadMeal> {
                         ],
                       ),
                     ),
-                    Container(
-                      child: Text(
-                          "친구들이 만든 식단은 어떨까요?\n가정에서도, 영양 선생님도 보시고응원해 주세요.",
-                          style: TextStyle(
-                            color: Color(0xff000000),
-                            fontFamily: "Arita-dotum-_OTF",
-                            fontStyle: FontStyle.normal,
-                            fontSize: 15,
-                          ),
-                          textAlign: TextAlign.center
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -248,7 +235,7 @@ class _ReadMealState extends State<ReadMeal> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: 50.0),
+                    SizedBox(height: 10.0),
                     Container(
                       padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
                       width: 350.0,

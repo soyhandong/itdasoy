@@ -27,11 +27,10 @@ class _MakeMealState extends State<MakeMeal> {
   bool moogi = false;
   bool water = false;
 
-  String pic1, pic2, pic3, pic4, pic5, pic6,
-      pic1n, pic2n, pic3n, pic4n, pic5n, pic6n;
+  String pic1,  pic2, pic3, pic4, pic5, pic6,
+      pic1n, pic2n, pic3n, pic4n, pic5n, pic6n = "";
   static int mindex = 1;
   String mindexing = "$mindex";
-  String mealKey= "키값요";
 
   Firestore _firestore = Firestore.instance;
   FirebaseUser user;
@@ -73,10 +72,19 @@ class _MakeMealState extends State<MakeMeal> {
     super.initState();
     getUser();
     _prepareService();
+    print('hello'+widget.mealKey);
   }
 
   void _prepareService() async {
     _imgUser = await _firebaseAuth.currentUser();
+  }
+
+  void setTapping()async{
+    await Firestore.instance.collection('mealList').document(widget.mealKey)
+        .setData({'email':email, 'nickname':nickname, 'school':school, 'clas':clas, 'grade':grade, 'mindexing':mindexing, 'mealKey':widget.mealKey,
+      'tansu':tansu, 'danback':danback, 'jibang': jibang, 'vitamin' : vitamin, 'moogi' : moogi, 'water' : water,
+      'pic1' : _ImageURL1, 'pic2' : _ImageURL2, 'pic3' : _ImageURL3, 'pic4' : _ImageURL4, 'pic5' : _ImageURL5, 'pic6' : _ImageURL6,
+      'pic1n' : pic1n, 'pic2n' : pic2n, 'pic3n' : pic3n, 'pic4n' : pic4n, 'pic5n' : pic5n, 'pic6n' : pic6n,});
   }
 
   @override
@@ -187,18 +195,6 @@ class _MakeMealState extends State<MakeMeal> {
                         ],
                       ),
                     ),
-                    Container(
-                      child: Text(
-                          "친구들이 만든 식단은 어떨까요?\n가정에서도, 영양 선생님도 보시고응원해 주세요.",
-                          style: TextStyle(
-                            color: Color(0xff000000),
-                            fontFamily: "Arita-dotum-_OTF",
-                            fontStyle: FontStyle.normal,
-                            fontSize: 15,
-                          ),
-                          textAlign: TextAlign.center
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -215,10 +211,10 @@ class _MakeMealState extends State<MakeMeal> {
                       decoration: BoxDecoration(
                         color: Color(0xfff2f2f2),
                         borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10.0),
-                            topRight: Radius.circular(10.0),
-                            bottomRight: Radius.circular(10.0),
-                            bottomLeft: Radius.circular(10.0),
+                          topLeft: Radius.circular(10.0),
+                          topRight: Radius.circular(10.0),
+                          bottomRight: Radius.circular(10.0),
+                          bottomLeft: Radius.circular(10.0),
                         ),
                       ),
                       child: Column(
@@ -328,21 +324,15 @@ class _MakeMealState extends State<MakeMeal> {
                           bottomLeft: Radius.circular(5.0),
                         ),
                       ),
-                      child: GestureDetector(
-                        child: _wPBuildConnectItem('assets/itda_orange.png', '잇기(올리기)'),
-                        onTap: () async{
-                          await Firestore.instance.collection('mealList').document(widget.mealKey)
-                              .setData({'email':email, 'nickname':nickname, 'school':school, 'clas':clas, 'grade':grade, 'mindexing':mindexing, 'mealKey':mealKey,
-                            'tansu':tansu, 'danback':danback, 'jibang': jibang, 'vitamin' : vitamin, 'moogi' : moogi, 'water' : water,
-                            'pic1' : _ImageURL1, 'pic2' : _ImageURL2, 'pic3' : _ImageURL3, 'pic4' : _ImageURL4, 'pic5' : _ImageURL5, 'pic6' : _ImageURL6,
-                            'pic1n' : pic1n, 'pic2n' : pic2n, 'pic3n' : pic3n, 'pic4n' : pic4n, 'pic5n' : pic5n, 'pic6n' : pic6n,});
-                          email = ''; nickname = ''; school = ''; clas = ''; grade = ''; mindexing = ''; mealKey ='';
-                          tansu = false; danback = false; jibang = false; vitamin = false; moogi = false; water = false;
-                          pic1 = ''; pic2 = ''; pic3 = ''; pic4 = ''; pic5 = ''; pic6 = '';
-                          pic1n = ''; pic2n = ''; pic3n = ''; pic4n = ''; pic5n = ''; pic6n = '';
-                          mindex = mindex + 1;
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MealList()));
-                        },
+                      child: InkWell(
+                        child: GestureDetector(
+                          child: _wPBuildConnectItem('assets/itda_orange.png', '잇기(올리기)'),
+                          onTap: () {
+                            setTapping();
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => MealList()));
+                            },
+
+                        ),
                       ),
                     ),
                     Container(height: 10.0,),

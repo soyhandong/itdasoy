@@ -6,15 +6,18 @@ import 'package:itda/help.dart';
 import 'package:itda/makeMeal.dart';
 import 'package:itda/readMeal.dart';
 import 'package:itda/readStory.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class MealList extends StatefulWidget {
-  String mealKey;
-  MealList({Key key,@required this.mealKey}) : super(key: key);
   @override
   _MealListState createState() => _MealListState();
 }
 
 class _MealListState extends State<MealList> {
+  String mealKey="";
   Firestore _firestore = Firestore.instance;
   FirebaseUser user ;
   String email="이메일";
@@ -29,15 +32,28 @@ class _MealListState extends State<MealList> {
     user = await FirebaseAuth.instance.currentUser();
     DocumentReference documentReference =  Firestore.instance.collection("loginInfo").document(user.email);
     await documentReference.get().then<dynamic>(( DocumentSnapshot snapshot) async {
-      setState(() {
-        email =snapshot.data["email"];
-        nickname =snapshot.data["nickname"];
-        school = snapshot.data["schoolname"];
-        grade = snapshot.data["grade"];
-        clas = snapshot.data["class"];
-        point = snapshot.data["point"];
-      });
+      if(this.mounted) {
+        setState(() {
+          email =snapshot.data["email"];
+          nickname =snapshot.data["nickname"];
+          school = snapshot.data["schoolname"];
+          grade = snapshot.data["grade"];
+          clas = snapshot.data["class"];
+          point = snapshot.data["point"];
+        });
+      }
     });
+  }
+
+  Future<String> settingDocument () async {
+    DocumentReference documentReference2 = await Firestore.instance.collection('mealList').add({});
+    print(documentReference2.documentID);
+    if(this.mounted) {
+      setState(() {
+        mealKey = documentReference2.documentID;
+      });
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MakeMeal(mealKey: mealKey)));
+    }
   }
 
   @override
@@ -187,7 +203,7 @@ class _MealListState extends State<MealList> {
                   child: GestureDetector(
                     child: _wPBuildConnectItem('assets/itda_orange.png', '식단짜기'),
                     onTap: () => {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MakeMeal())),
+                      settingDocument(),
                     },
                   ),
                 ),
