@@ -24,7 +24,7 @@ class _MakeMealState extends State<MakeMeal> {
   bool moogi = false;
   bool water = false;
 
-  var pic1, pic2, pic3, pic4, pic5, pic6,
+  String pic1, pic2, pic3, pic4, pic5, pic6,
       pic1n, pic2n, pic3n, pic4n, pic5n, pic6n;
   static int mindex = 1;
   String mindexing = "$mindex";

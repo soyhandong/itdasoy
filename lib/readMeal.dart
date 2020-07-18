@@ -17,20 +17,6 @@ class ReadMeal extends StatefulWidget {
 }
 
 class _ReadMealState extends State<ReadMeal> {
-  File _image1, _image2, _image3, _image4, _image5, _image6;
-  final _formKey = GlobalKey<FormState>();
-  bool tansu = false;
-  bool danback = false;
-  bool jibang = false;
-  bool vitamin = false;
-  bool moogi = false;
-  bool water = false;
-
-  String pic1, pic2, pic3, pic4, pic5, pic6,
-      pic1n, pic2n, pic3n, pic4n, pic5n, pic6n;
-  static int mindex = 1;
-  String mindexing = "$mindex";
-
   Firestore _firestore = Firestore.instance;
   FirebaseUser user;
   String email="이메일";
@@ -40,6 +26,25 @@ class _ReadMealState extends State<ReadMeal> {
   String clas = "반";
   int point = -1;
   dynamic data;
+
+  File _image1, _image2, _image3, _image4, _image5, _image6;
+  final _formKey = GlobalKey<FormState>();
+  bool tansu = false;
+  bool danback = false;
+  bool jibang = false;
+  bool vitamin = false;
+  bool moogi = false;
+  bool water = false;
+
+  String pic1, pic2, pic3, pic4, pic5, pic6;
+  String pic1n = "사진1";
+  String pic2n = "사진2";
+  String pic3n = "사진3";
+  String pic4n = "사진4";
+  String pic5n = "사진5";
+  String pic6n = "사진6";
+  static int mindex = 1;
+  String mindexing = "$mindex";
 
   Future<String> getUser () async {
     user = await FirebaseAuth.instance.currentUser();
@@ -65,7 +70,7 @@ class _ReadMealState extends State<ReadMeal> {
   String _ImageURL5 = "";
   String _ImageURL6 = "";
 
-  Future<String> getMeal () async {
+  Future<String> getMeal() async {
     _imgUser = await FirebaseAuth.instance.currentUser();
     DocumentReference documentReference =  Firestore.instance.collection("mealList").document(widget.mindexing);
     await documentReference.get().then<dynamic>(( DocumentSnapshot snapshot) async {
@@ -104,6 +109,7 @@ class _ReadMealState extends State<ReadMeal> {
   void initState() {
     super.initState();
     getUser();
+    getMeal();
     _prepareService();
   }
 
@@ -259,10 +265,10 @@ class _ReadMealState extends State<ReadMeal> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                _smallImageItem(getGalleryImage1, _image1, pic1n, "one"),
-                                _smallImageItem(getGalleryImage2, _image2, pic2n, "two"),
-                                _smallImageItem(getGalleryImage3, _image3, pic3n, "three"),
-                                _smallImageItem(getGalleryImage4, _image4, pic4n, "four"),
+                                _smallImageItem(pic1, pic1n),
+                                _smallImageItem(pic2, pic2n),
+                                _smallImageItem(pic3, pic3n),
+                                _smallImageItem(pic4, pic4n),
                               ],
                             ),
                           ),
@@ -273,8 +279,8 @@ class _ReadMealState extends State<ReadMeal> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                _bigImageItem(getGalleryImage5, _image5, pic5n, "five"),
-                                _bigImageItem(getGalleryImage6, _image6, pic6n, "six"),
+                                _bigImageItem(pic5, pic5n),
+                                _bigImageItem(pic6, pic6n),
                               ],
                             ),
                           ),
@@ -512,121 +518,80 @@ class _ReadMealState extends State<ReadMeal> {
       ),
     );
   }
-  Widget _smallImageItem(Function gettingImg, File sImgPath, String sImgName, String i){
+  Widget _smallImageItem(String sImgPath, String sImgName){
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Column(
             children: <Widget>[
-              GestureDetector(
-                onTap: gettingImg,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 1.0),
-                  child: Container(
-                    height: 80.0,
-                    width: 80.0,
-                    child: sImgPath == null ?
-                    Container(child: Image.asset('assets/add_photo.png'),)
-                        : Image.file(sImgPath),
-                    decoration: BoxDecoration(
-                      color: Color(0xffd1dad5),
-                    ),
+              Container(
+                height: 80.0,
+                width: 80.0,
+                child: sImgPath == null ?
+                Container(child: Image.asset('assets/add_photo.png'),)
+                    : Container(
+                  height: 80.0,
+                  width: 80.0,
+                  decoration: BoxDecoration(
+                    color: Color(0xffd1dad5),
+                    image: DecorationImage(image: NetworkImage(sImgPath),),
                   ),
                 ),
+                decoration: BoxDecoration(
+                  color: Color(0xffd1dad5),
+                ),
               ),
-              GestureDetector(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 1.0),
-                  child: Container(
-                    height: 30.0,
-                    width: 80.0,
-                    child: TextFormField(
-                      maxLines: 1,
-                      //onChanged: (text) => sImgName = text,
-                      onChanged: (String value) {
-                        setState(() {
-                          switch(i){
-                            case "one":
-                              pic1n = value;
-                              break;
-                            case "two" :
-                              pic2n = value;
-                              break;
-                            case "three" :
-                              pic3n = value;
-                              break;
-                            case "four" :
-                              pic4n = value;
-                              break;
-                          }
-                        });
-                      },
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                    ),
-                  ),
+              Container(
+                height: 30.0,
+                width: 80.0,
+                child: Text(sImgName),
+                decoration: BoxDecoration(
+                  color: Colors.white,
                 ),
               ),
             ],
           ),
+          Container(width: 2.0,),
         ],
       ),
     );
   }
-  Widget _bigImageItem(Function gettingImg, File bImgPath, String bImgName, String i){
+  Widget _bigImageItem(String bImgPath, String bImgName){
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Column(
             children: <Widget>[
-              GestureDetector(
-                onTap: gettingImg,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Container(
-                    height: 100.0,
-                    width: 100.0,
-                    child: bImgPath == null ?
-                    Container(child: Image.asset('assets/add_photo.png'),)
-                        : Image.file(bImgPath),
-                    decoration: BoxDecoration(
-                      color: Color(0xffd1dad5),
-                    ),
+              Container(
+                height: 100.0,
+                width: 150.0,
+                child: bImgPath == null ?
+                Container(child: Image.asset('assets/add_photo.png'),)
+                    : Container(
+                  height: 100.0,
+                  width: 150.0,
+                  decoration: BoxDecoration(
+                    color: Color(0xffd1dad5),
+                    image: DecorationImage(image: NetworkImage(bImgPath),),
                   ),
                 ),
+                decoration: BoxDecoration(
+                  color: Color(0xffd1dad5),
+                ),
               ),
-              GestureDetector(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 1.0),
-                  child: Container(
-                    height: 30.0,
-                    width: 100.0,
-                    child: TextFormField(
-                      maxLines: 1,
-                      onChanged: (String value) {
-                        setState(() {
-                          switch(i){
-                            case "five":
-                              pic5n = value;
-                              break;
-                            case "six" :
-                              pic6n = value;
-                              break;
-                          }
-                        });
-                      },
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                    ),
-                  ),
+              Container(
+                height: 30.0,
+                width: 150.0,
+                child: Text(bImgName),
+                decoration: BoxDecoration(
+                  color: Colors.white,
                 ),
               ),
             ],
           ),
+          Container(width: 2.0,),
         ],
       ),
     );
