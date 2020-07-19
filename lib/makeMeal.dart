@@ -1,14 +1,12 @@
 //https://minwook-shin.github.io/flutter-use-image-picker/ -->imagepicker
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:itda/mealList.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:itda/help.dart';
-import 'dart:math';
+import 'package:itda/mealList.dart';
 
 class MakeMeal extends StatefulWidget {
   String mealKey;
@@ -18,7 +16,7 @@ class MakeMeal extends StatefulWidget {
 }
 
 class _MakeMealState extends State<MakeMeal> {
-  File _image1, _image2, _image3, _image4, _image5, _image6;
+  File _image1, _image2, _image3, _image4, _image5, _image6 = null;
   final _formKey = GlobalKey<FormState>();
   bool tansu = false;
   bool danback = false;
@@ -331,7 +329,6 @@ class _MakeMealState extends State<MakeMeal> {
                             setTapping();
                             Navigator.push(context, MaterialPageRoute(builder: (context) => MealList()));
                             },
-
                         ),
                       ),
                     ),

@@ -1,20 +1,20 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:itda/help.dart';
 import 'package:itda/readStory.dart';
 import 'package:itda/writeStory.dart';
-import 'package:flutter/rendering.dart';
 
 class StoryConnect extends StatefulWidget {
-  String sindexing;
-  StoryConnect({Key key,@required this.sindexing}) : super(key: key);
   @override
   _StoryConnectState createState() => _StoryConnectState();
 }
 
 class _StoryConnectState extends State<StoryConnect> {
+  String storyKey="";
   Firestore _firestore = Firestore.instance;
   FirebaseUser user ;
   String email="이메일";
@@ -37,6 +37,17 @@ class _StoryConnectState extends State<StoryConnect> {
         point = snapshot.data["point"];
       });
     });
+  }
+
+  Future<String> storySettingDocument () async {
+    DocumentReference storyDocumentReference = await Firestore.instance.collection('storyingList').add({});
+    print(storyDocumentReference.documentID);
+    if(this.mounted) {
+      setState(() {
+        storyKey = storyDocumentReference.documentID;
+      });
+      Navigator.push(context, MaterialPageRoute(builder: (context) => WriteStory(storyKey: storyKey)));
+    }
   }
 
   @override
@@ -145,7 +156,7 @@ class _StoryConnectState extends State<StoryConnect> {
                     child: GestureDetector(
                       child: _wPBuildConnectItem('assets/itda_orange.png', '글쓰기'),
                       onTap: () => {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => WriteStory())),
+                        storySettingDocument(),
                       },
                     ),
                   ),
@@ -230,7 +241,7 @@ class _StoryConnectState extends State<StoryConnect> {
                     subtitle: Text(item['ssubject'],),
                     trailing: Icon(Icons.keyboard_arrow_right),
                     onTap: () => {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ReadStory(sindexing: item['sindexing'],))),
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ReadStory(storyKey: item['storyKey'],))),
                     },
                     //selected: true,
                   ),
@@ -242,8 +253,6 @@ class _StoryConnectState extends State<StoryConnect> {
     );
   }
 }
-
-
 
 class SRecord{
   final String nickname;

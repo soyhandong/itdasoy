@@ -1,19 +1,21 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:itda/help.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:itda/readStory.dart';
+import 'package:itda/help.dart';
+import 'package:itda/storyConnect.dart';
 
 class WriteStory extends StatefulWidget {
+  String storyKey;
+  WriteStory({Key key,@required this.storyKey}) : super(key: key);
   @override
   _WriteStoryState createState() => _WriteStoryState();
 }
 
 class _WriteStoryState extends State<WriteStory> {
-  var ssubject, scontent, srecord;
+  String ssubject, scontent, srecord = "";
   static int sindex = 1;
   String sindexing = "$sindex";
 
@@ -42,10 +44,28 @@ class _WriteStoryState extends State<WriteStory> {
     });
   }
 
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  FirebaseUser _storyfireUser;
+  FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+
   @override
   void initState() {
     super.initState();
     getUser();
+    _storyPrepareService();
+    print('hello'+widget.storyKey);
+  }
+
+  void _storyPrepareService() async {
+    _storyfireUser = await _firebaseAuth.currentUser();
+  }
+
+  void storySetTapping() async{
+    await Firestore.instance.collection('storyList').document(widget.storyKey)
+        .setData({
+      'email':email, 'nickname':nickname, 'school':school, 'clas':clas, 'grade':grade,
+      'ssubject':ssubject, 'scontent':scontent, 'srecord': srecord, 'sindexing':sindexing,
+      'storyKey':widget.storyKey});
   }
 
   @override
@@ -281,22 +301,27 @@ class _WriteStoryState extends State<WriteStory> {
                             bottomLeft: Radius.circular(5.0),
                           ),
                         ),
-                        child: GestureDetector(
-                          child: _wPBuildConnectItem('assets/itda_orange.png','잇기(올리기)'),
-                          onTap: () async{
-                            await Firestore.instance.collection('storyList').document(sindexing).setData({'email':email, 'nickname':nickname, 'school':school, 'clas':clas, 'grade':grade, 'ssubject':ssubject, 'scontent':scontent, 'srecord': srecord, 'sindexing':sindexing});
-                            email = ''; nickname = ''; school = ''; clas = ''; grade = ''; ssubject = ''; scontent = ''; srecord = ''; sindexing = '';
-                            sindex = sindex + 1;
-                            Navigator.pop(context);
-                          },
+                        child: InkWell(
+                          child: GestureDetector(
+                            child: _wPBuildConnectItem('assets/itda_orange.png','잇기(올리기)'),
+                            onTap: () {
+                              storySetTapping();
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => StoryConnect()));
+                            },
+                          ),
                         ),
                       ),
                       Container(
                         decoration: BoxDecoration(
                           color: Color(0xfffff7ef),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(5.0),
+                            bottomRight: Radius.circular(5.0),
+                          ),
                         ),
                         child: _wPBuildConnectItem('assets/hold.png','나만보기'),
                       ),
+                      /*
                       Container(
                         decoration: BoxDecoration(
                           color: Color(0xfffff7ef),
@@ -307,9 +332,11 @@ class _WriteStoryState extends State<WriteStory> {
                         ),
                         child: _wPBuildConnectItem('assets/list.png','목록'),
                       ),
+                      * */
                     ],
                   ),
                 ),
+                Container(height: 10.0,),
               ],
             ),
           ),

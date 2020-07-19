@@ -1,15 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:itda/storyConnect.dart';
-import 'package:itda/help.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:itda/help.dart';
 
 class ReadStory extends StatefulWidget {
-  String sindexing;
-  ReadStory({Key key,@required this.sindexing}) : super(key: key);
+  String storyKey;
+  ReadStory({Key key,@required this.storyKey}) : super(key: key);
   @override
   _ReadStoryState createState() => _ReadStoryState();
 }
@@ -39,37 +38,42 @@ class _ReadStoryState extends State<ReadStory> {
       });
     });
   }
-  FirebaseUser suser;
+
   String ssubject = "";
   String scontent = "";
   String srecord = "";
   String sindexing = "";
+  String storyKey = "키값";
+
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  FirebaseUser _storyfireUser;
+  FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
 
   Future<String> getStory () async {
-    suser = await FirebaseAuth.instance.currentUser();
-    DocumentReference documentReference =  Firestore.instance.collection("storyList").document(widget.sindexing);
+    _storyfireUser = await FirebaseAuth.instance.currentUser();
+    DocumentReference documentReference =  Firestore.instance.collection("storyList").document(widget.storyKey);
     await documentReference.get().then<dynamic>(( DocumentSnapshot snapshot) async {
       setState(() {
-        /*
-        email =snapshot.data["email"];
-        nickname =snapshot.data["nickname"];
-        school = snapshot.data["schoolname"];
-        grade = snapshot.data["grade"];
-        clas = snapshot.data["class"];
-        * */
         ssubject = snapshot.data["ssubject"];
         scontent = snapshot.data["scontent"];
         srecord = snapshot.data["srecord"];
         sindexing = snapshot.data["sindexing"];
+        storyKey = snapshot.data["storyKey"];
       });
     });
   }
+
+  void _storyPrepareService() async {
+    _storyfireUser = await _firebaseAuth.currentUser();
+  }
+
 
   @override
   void initState() {
     super.initState();
     getUser();
     getStory();
+    _storyPrepareService();
   }
 
   @override

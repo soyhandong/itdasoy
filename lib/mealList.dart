@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,11 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:itda/help.dart';
 import 'package:itda/makeMeal.dart';
 import 'package:itda/readMeal.dart';
-import 'package:itda/readStory.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 class MealList extends StatefulWidget {
   @override
@@ -46,7 +42,7 @@ class _MealListState extends State<MealList> {
   }
 
   Future<String> settingDocument () async {
-    DocumentReference documentReference2 = await Firestore.instance.collection('mealList').add({});
+    DocumentReference documentReference2 = await Firestore.instance.collection('mealingList').add({});
     print(documentReference2.documentID);
     if(this.mounted) {
       setState(() {
