@@ -1,10 +1,10 @@
 //https://github.com/rajayogan/flutterui-curveddesigns
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:itda/poemConnect.dart';
-import 'package:itda/songConnect.dart';
-import 'package:itda/storyConnect.dart';
-import 'package:itda/imagepic.dart';
+import 'package:itda/connectPoem.dart';
+import 'package:itda/help.dart';
+import 'package:itda/connectSong.dart';
+import 'package:itda/connectStory.dart';
 
 class ConnectHeart extends StatefulWidget {
   @override
@@ -29,7 +29,7 @@ class _ConnectHeartState extends State<ConnectHeart> {
               onPressed: (){
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PoemConnect()));
+                    MaterialPageRoute(builder: (context) => HelpPage()));
               },
             )
           ],
@@ -121,7 +121,7 @@ class _ConnectHeartState extends State<ConnectHeart> {
                   onTap: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => PoemConnect()));
+                        MaterialPageRoute(builder: (context) => ConnectPoem()));
                   },
                 ),
                 SizedBox(height: 30.0,),
@@ -130,7 +130,7 @@ class _ConnectHeartState extends State<ConnectHeart> {
                   onTap: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => StoryConnect()));
+                        MaterialPageRoute(builder: (context) => ConnectStory()));
                   },
                 ),
                 SizedBox(height: 30.0,),
@@ -139,7 +139,7 @@ class _ConnectHeartState extends State<ConnectHeart> {
                   onTap: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SongConnect()));
+                        MaterialPageRoute(builder: (context) => ConnectSong()));
                   },
                 ),
               ],

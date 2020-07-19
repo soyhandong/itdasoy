@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,20 +6,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:medcorder_audio/medcorder_audio.dart';
 import 'package:itda/help.dart';
-import 'package:itda/songConnect.dart';
 
-class WriteSong extends StatefulWidget {
+class ReadSong extends StatefulWidget {
   String songKey;
-  WriteSong({Key key,@required this.songKey}) : super(key: key);
+  ReadSong({Key key,@required this.songKey}) : super(key: key);
   @override
-  _WriteSongState createState() => _WriteSongState();
+  _ReadSongState createState() => _ReadSongState();
 }
 
-class _WriteSongState extends State<WriteSong> {
-  String ssubject, scontent, srecord = "";
-  static int sindex = 1;
-  String sindexing = "$sindex";
-
+class _ReadSongState extends State<ReadSong> {
   Firestore _firestore = Firestore.instance;
   FirebaseUser user;
   String email="이메일";
@@ -31,6 +25,16 @@ class _WriteSongState extends State<WriteSong> {
   int point = -1;
   dynamic data;
   final _formKey = GlobalKey<FormState>();
+
+  MedcorderAudio audioModule = new MedcorderAudio();
+  bool canRecord = false;
+  double recordPower = 0.0;
+  double recordPosition = 0.0;
+  bool isRecord = false;
+  bool isPlay = false;
+  double playPosition = 0.0;
+  String file = "";
+
 
   Future<String> getUser () async {
     user = await FirebaseAuth.instance.currentUser();
@@ -46,42 +50,32 @@ class _WriteSongState extends State<WriteSong> {
     });
   }
 
+  String ssubject = "";
+  String scontent = "";
+  String srecord = "";
+  String sindexing = "";
+  String songKey = "키값";
+
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseUser _songfireUser;
   FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
 
-  MedcorderAudio audioModule = new MedcorderAudio();
-  bool canRecord = false;
-  double recordPower = 0.0;
-  double recordPosition = 0.0;
-  bool isRecord = false;
-  bool isPlay = false;
-  double playPosition = 0.0;
-  String file = "";
-
-  @override
-  void initState() {
-    super.initState();
-    getUser();
-    _songPrepareService();
-    print('hello'+widget.songKey);
-
-    audioModule.setCallBack((dynamic redata) {
-      _onEvent(redata);
+  Future<String> getSong () async {
+    _songfireUser = await FirebaseAuth.instance.currentUser();
+    DocumentReference documentReference =  Firestore.instance.collection("songList").document(widget.songKey);
+    await documentReference.get().then<dynamic>(( DocumentSnapshot snapshot) async {
+      setState(() {
+        ssubject = snapshot.data["ssubject"];
+        scontent = snapshot.data["scontent"];
+        srecord = snapshot.data["srecord"];
+        sindexing = snapshot.data["sindexing"];
+        songKey = snapshot.data["songKey"];
+      });
     });
-    _initSettings();
   }
 
   void _songPrepareService() async {
     _songfireUser = await _firebaseAuth.currentUser();
-  }
-
-  void songSetTapping() async{
-    await Firestore.instance.collection('songList').document(widget.songKey)
-        .setData({
-      'email':email, 'nickname':nickname, 'school':school, 'clas':clas, 'grade':grade,
-      'ssubject':ssubject, 'scontent':scontent, 'srecord': file, 'sindexing':sindexing,
-      'songKey':widget.songKey});
   }
 
   Future _initSettings() async {
@@ -95,44 +89,12 @@ class _WriteSongState extends State<WriteSong> {
     return;
   }
 
-  Future _startRecord() async {
-    try {
-      DateTime time = new DateTime.now();
-      setState(() {
-        file = time.millisecondsSinceEpoch.toString();
-      });
-      final String result = await audioModule.startRecord(file);
-      setState(() {
-        isRecord = true;
-      });
-      print('startRecord: ' + result);
-    } catch (e) {
-      file = "";
-      print('startRecord: fail');
-    }
-  }
-
-  Future _stopRecord() async {
-    try {
-      final String result = await audioModule.stopRecord();
-      print('stopRecord: ' + result);
-      setState(() {
-        isRecord = false;
-      });
-    } catch (e) {
-      print('stopRecord: fail');
-      setState(() {
-        isRecord = false;
-      });
-    }
-  }
-
   Future _startStopPlay() async {
     if (isPlay) {
       await audioModule.stopPlay();
     } else {
       await audioModule.startPlay({
-        "file": file,
+        "file": srecord,
         "position": 0.0,
       });
     }
@@ -160,6 +122,20 @@ class _WriteSongState extends State<WriteSong> {
       });
     }
   }
+
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+    getSong();
+    _songPrepareService();
+
+    audioModule.setCallBack((dynamic redata) {
+      _onEvent(redata);
+    });
+    _initSettings();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -206,8 +182,7 @@ class _WriteSongState extends State<WriteSong> {
       ),
       body: Container(
         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-        child: canRecord
-            ? SingleChildScrollView(
+        child: SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(
@@ -257,105 +232,21 @@ class _WriteSongState extends State<WriteSong> {
                   ),
                 ),
                 Container(
-                  height: 130,
+                  height: 70,
                   decoration: BoxDecoration(
                       color: const Color(0xffe9f4eb)
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
+                      Container(width: 30.0,),
                       Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Container(width: 10.0,),
                             Container(
-                              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                              child: InkWell(
-                                child: Container(
-                                  child: isRecord ?
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Container(
-                                        width: 25,
-                                        height: 25,
-                                        child: Image.asset('assets/stop.png'),
-                                        //color: Colors.white,
-                                      ),
-                                      Container(
-                                        height: 3.0,
-                                      ),
-                                      Container(
-                                        child: Text(
-                                          '녹음 끝내기',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: "Arita-dotum-_OTF",
-                                            fontStyle: FontStyle.normal,
-                                            fontSize: 9,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                      :
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Container(
-                                        width: 25,
-                                        height: 25,
-                                        child: Image.asset('assets/record.png'),
-                                        //color: Colors.white,
-                                      ),
-                                      Container(
-                                        height: 3.0,
-                                      ),
-                                      Container(
-                                        child: Text(
-                                          '녹음 하기',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: "Arita-dotum-_OTF",
-                                            fontStyle: FontStyle.normal,
-                                            fontSize: 9,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                onTap: () {
-                                  if (isRecord) {
-                                    _stopRecord();
-                                  } else {
-                                    _startRecord();
-                                  }
-                                },
-                              ),
-                            ),
-                            Container(width: 10.0,),
-                            new Text('recording: ' + recordPosition.toString()),
-                          ],
-                        ),
-                        //width: 200.0,
-                      ),
-                      Container(height: 10.0,),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Container(width: 10.0,),
-                            Container(
-                              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
                               child: InkWell(
                                 child: Container(
                                   child: isPlay ?
@@ -364,17 +255,24 @@ class _WriteSongState extends State<WriteSong> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Container(
-                                        width: 25,
-                                        height: 25,
-                                        child: Image.asset('assets/stop.png'),
+                                        width: 35,
+                                        height: 35,
+                                        child: IconButton(
+                                          icon: Icon(Icons.stop),
+                                          color: Colors.white,
+                                          iconSize: 35.0,
+                                          onPressed: () {
+                                            print('정지');
+                                          },
+                                        ),
                                         //color: Colors.white,
                                       ),
                                       Container(
-                                        height: 3.0,
+                                        height: 10.0,
                                       ),
                                       Container(
                                         child: Text(
-                                          '멈추기',
+                                          '  멈추기',
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w700,
@@ -383,6 +281,9 @@ class _WriteSongState extends State<WriteSong> {
                                             fontSize: 9,
                                           ),
                                         ),
+                                      ),
+                                      Container(
+                                        height: 10.0,
                                       ),
                                     ],
                                   )
@@ -392,25 +293,35 @@ class _WriteSongState extends State<WriteSong> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Container(
-                                        width: 25,
-                                        height: 25,
-                                        child: Image.asset('assets/listen.png'),
+                                        width: 35,
+                                        height: 35,
+                                        child: IconButton(
+                                          icon: Icon(Icons.play_arrow),
+                                          color: Colors.white,
+                                          iconSize: 35.0,
+                                          onPressed: () {
+                                            print('녹음듣기');
+                                          },
+                                        ),
                                         //color: Colors.white,
                                       ),
                                       Container(
-                                        height: 3.0,
+                                        height: 10.0,
                                       ),
                                       Container(
                                         child: Text(
-                                          '녹음 듣기',
+                                          '  녹음 듣기',
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w700,
                                             fontFamily: "Arita-dotum-_OTF",
                                             fontStyle: FontStyle.normal,
-                                            fontSize: 9,
+                                            fontSize: 12,
                                           ),
                                         ),
+                                      ),
+                                      Container(
+                                        height: 10.0,
                                       ),
                                     ],
                                   ),
@@ -422,12 +333,11 @@ class _WriteSongState extends State<WriteSong> {
                                 },
                               ),
                             ),
-                            Container(width: 10.0,),
-                            new Text('playing: ' + playPosition.toString()),
                           ],
                         ),
-                        //width: 200.0,
                       ),
+                      Container(width: 30.0,),
+                      Text('playing: ' + playPosition.toString()),
                     ],
                   ),
                 ),
@@ -462,21 +372,7 @@ class _WriteSongState extends State<WriteSong> {
                               decoration: BoxDecoration(
                                   color: const Color(0x69e9f4eb)
                               ),
-                              child: TextFormField(
-                                maxLines: 1,
-                                onChanged: (text) => ssubject = text,
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return '제목을 쓰세요';
-                                  } else
-                                    return null;
-                                },
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: '제목을 쓰세요',
-                                  //labelText: "Enter your username",
-                                ),
-                              ),
+                              child: Text(ssubject),
                             ),
                             SizedBox(height: 10.0,),
                             Text('나의 느낀점(다짐)',
@@ -494,21 +390,7 @@ class _WriteSongState extends State<WriteSong> {
                               decoration: BoxDecoration(
                                   color: const Color(0x69e9f4eb)
                               ),
-                              child: TextFormField(
-                                maxLines: 30,
-                                onChanged: (text) => scontent = text,
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return '느낀점을 쓰세요';
-                                  } else
-                                    return null;
-                                },
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: '느낀점을 쓰세요',
-                                  //labelText: "Enter your username",
-                                ),
-                              ),
+                              child: Text(scontent),
                             ),
                             SizedBox(height: 10.0,),
                             Text('녹음파일',
@@ -544,88 +426,29 @@ class _WriteSongState extends State<WriteSong> {
                           color: Color(0xfffff7ef),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(5.0),
+                            topRight: Radius.circular(5.0),
                             bottomLeft: Radius.circular(5.0),
-                          ),
-                        ),
-                        child: InkWell(
-                          child: GestureDetector(
-                            child: _wPBuildConnectItem('assets/itda_orange.png','잇기(올리기)'),
-                            onTap: () {
-                              songSetTapping();
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => SongConnect()));
-                            },
-                          ),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xfffff7ef),
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(5.0),
                             bottomRight: Radius.circular(5.0),
                           ),
                         ),
-                        child: _wPBuildConnectItem('assets/hold.png','나만보기'),
-                      ),
-                      /*
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xfffff7ef),
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(5.0),
-                            bottomRight: Radius.circular(5.0),
-                          ),
+                        child: GestureDetector(
+                          child: _wPBuildConnectItem('assets/list.png','목록'),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
                         ),
-                        child: _wPBuildConnectItem('assets/list.png','목록'),
                       ),
-                      * */
                     ],
                   ),
                 ),
-                Container(height: 10.0,),
               ],
             ),
           ),
-        )
-            : Text(
-          '마이크 접근이 금지 되어있습니다. 설정에서 마이크 접근 허용을 해주세요!',
-          textAlign: TextAlign.center,
         ),
       ),
     );
   }
-  Widget _recordingItem(String rimgPath, String rlinkName) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            width: 25,
-            height: 25,
-            child: Image.asset(rimgPath),
-            //color: Colors.white,
-          ),
-          Container(
-            height: 3.0,
-          ),
-          Container(
-            child: Text(
-              rlinkName,
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w700,
-                fontFamily: "Arita-dotum-_OTF",
-                fontStyle: FontStyle.normal,
-                fontSize: 9,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
   Widget _wPBuildConnectItem(String wPimgPath, String wPlinkName) {
     return Container(
       padding: EdgeInsets.fromLTRB(5, 5, 5, 5),

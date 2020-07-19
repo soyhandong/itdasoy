@@ -6,16 +6,16 @@ import 'package:flutter/rendering.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:itda/help.dart';
-import 'package:itda/writePoem.dart';
-import 'readPoem.dart';
+import 'package:itda/readSong.dart';
+import 'package:itda/writeSong.dart';
 
-class ConnectPoem extends StatefulWidget {
+class ConnectSong extends StatefulWidget {
   @override
-  _ConnectPoemState createState() => _ConnectPoemState();
+  _ConnectSongState createState() => _ConnectSongState();
 }
 
-class _ConnectPoemState extends State<ConnectPoem> {
-  String poemKey="";
+class _ConnectSongState extends State<ConnectSong> {
+  String songKey="";
   Firestore _firestore = Firestore.instance;
   FirebaseUser user ;
   String email="이메일";
@@ -40,14 +40,14 @@ class _ConnectPoemState extends State<ConnectPoem> {
     });
   }
 
-  Future<String> poemSettingDocument () async {
-    DocumentReference poemDocumentReference = await Firestore.instance.collection('poemingList').add({});
-    print(poemDocumentReference.documentID);
+  Future<String> songSettingDocument () async {
+    DocumentReference songDocumentReference = await Firestore.instance.collection('songingList').add({});
+    print(songDocumentReference.documentID);
     if(this.mounted) {
       setState(() {
-        poemKey = poemDocumentReference.documentID;
+        songKey = songDocumentReference.documentID;
       });
-      Navigator.push(context, MaterialPageRoute(builder: (context) => WritePoem(poemKey: poemKey)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => WriteSong(songKey: songKey)));
     }
   }
 
@@ -127,7 +127,7 @@ class _ConnectPoemState extends State<ConnectPoem> {
                   ),
                   Container(
                     child: Text(
-                      '시로 마음을 잇다',
+                      '노래로 마음을 잇다',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
@@ -157,7 +157,7 @@ class _ConnectPoemState extends State<ConnectPoem> {
                     child: GestureDetector(
                       child: _wPBuildConnectItem('assets/itda_orange.png', '글쓰기'),
                       onTap: () => {
-                        poemSettingDocument(),
+                        songSettingDocument(),
                       },
                     ),
                   ),
@@ -206,7 +206,7 @@ class _ConnectPoemState extends State<ConnectPoem> {
   Widget _slist () {
     return Expanded(
       child: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('poemList').snapshots(),
+          stream: Firestore.instance.collection('songList').snapshots(),
           builder: (context, snapshot) {
             //if (!snapshot.hasData) return LinearProgressIndicator();
             final items = snapshot.data.documents;
@@ -242,7 +242,7 @@ class _ConnectPoemState extends State<ConnectPoem> {
                     subtitle: Text(item['ssubject'],),
                     trailing: Icon(Icons.keyboard_arrow_right),
                     onTap: () => {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ReadPoem(poemKey: item['poemKey'],))),
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ReadSong(songKey: item['songKey'],))),
                     },
                     //selected: true,
                   ),

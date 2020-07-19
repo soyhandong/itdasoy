@@ -7,7 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:medcorder_audio/medcorder_audio.dart';
 import 'package:itda/help.dart';
-import 'package:itda/storyConnect.dart';
+import 'connectStory.dart';
 
 class WriteStory extends StatefulWidget {
   String storyKey;
@@ -243,7 +243,7 @@ class _WriteStoryState extends State<WriteStory> {
                       ),
                       Container(
                         child: Text(
-                          '시로 마음을 잇다',
+                          '이야기로 마음을 잇다',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
@@ -552,7 +552,7 @@ class _WriteStoryState extends State<WriteStory> {
                             child: _wPBuildConnectItem('assets/itda_orange.png','잇기(올리기)'),
                             onTap: () {
                               storySetTapping();
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => StoryConnect()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => ConnectStory()));
                             },
                           ),
                         ),
