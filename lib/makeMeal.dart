@@ -9,7 +9,7 @@ import 'package:itda/help.dart';
 import 'package:itda/mealList.dart';
 
 class MakeMeal extends StatefulWidget {
-  String mealKey;
+  String mealKey="키";
   MakeMeal({Key key,@required this.mealKey}) : super(key: key);
   @override
   _MakeMealState createState() => _MakeMealState();
@@ -25,8 +25,20 @@ class _MakeMealState extends State<MakeMeal> {
   bool moogi = false;
   bool water = false;
 
-  String pic1,  pic2, pic3, pic4, pic5, pic6,
-      pic1n, pic2n, pic3n, pic4n, pic5n, pic6n = "";
+  String pic1 = "픽쳐";
+  String pic2 = "픽쳐";
+  String pic3 = "픽쳐";
+  String pic4 = "픽쳐";
+  String pic5 = "픽쳐";
+  String pic6 = "픽쳐";
+  String pic1n = "픽쳐";
+  String pic2n = "픽쳐";
+  String pic3n = "픽쳐";
+  String pic4n = "픽쳐";
+  String pic5n = "픽쳐";
+  String pic6n = "픽쳐";
+
+
   static int mindex = 1;
   String mindexing = "$mindex";
 
@@ -38,7 +50,7 @@ class _MakeMealState extends State<MakeMeal> {
   String grade = "학년";
   String clas = "반";
   int point = -1;
-  dynamic data;
+  dynamic data = "데이터";
 
   Future<String> getUser () async {
     user = await FirebaseAuth.instance.currentUser();
@@ -58,12 +70,12 @@ class _MakeMealState extends State<MakeMeal> {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseUser _imgUser;
   FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
-  String _ImageURL1 = "";
-  String _ImageURL2 = "";
-  String _ImageURL3 = "";
-  String _ImageURL4 = "";
-  String _ImageURL5 = "";
-  String _ImageURL6 = "";
+  String _ImageURL1 = "url";
+  String _ImageURL2 = "url";
+  String _ImageURL3 = "url";
+  String _ImageURL4 = "url";
+  String _ImageURL5 = "url";
+  String _ImageURL6 = "url";
 
   @override
   void initState() {
@@ -330,14 +342,18 @@ class _MakeMealState extends State<MakeMeal> {
                         child: GestureDetector(
                           child: _wPBuildConnectItem('assets/itda_orange.png', '잇기(올리기)'),
                           onTap: () {
+                            setTapping();
+                            Navigator.pop(context, MaterialPageRoute(builder: (context) => MealList()));
+                            /*
                             if (_formKey.currentState.validate()) {
                               Scaffold
                                   .of(context)
                                   .showSnackBar(SnackBar(content: Text('Processing Data')));
-
                               setTapping();
                               Navigator.pop(context, MaterialPageRoute(builder: (context) => MealList()));
                             }
+
+ */
                             },
                         ),
                       ),

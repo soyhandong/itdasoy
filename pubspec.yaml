@@ -17,11 +17,12 @@ dependencies:
   firebase_storage: ^3.0.8
   file_picker: 1.4.3+1
   audio_recorder:
-
   flutter_sound:
   intl: ^0.16.1
   path_provider: ^1.6.1
   path: ^1.6.4
+  permission_handler:
+  permissions_plugin:
 
 
 dev_dependencies:

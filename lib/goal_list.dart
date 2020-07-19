@@ -30,8 +30,11 @@ class Goal_ListPage extends StatelessWidget{
   }
 
   Widget _buildGridCards(BuildContext context, DocumentSnapshot data) {
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+    var screenHeight = queryData.size.height;
+    var screenWidth = queryData.size.width;
     final record = Record.fromSnapshot(data);
-
     return Card(
       elevation: 5,
       shape: RoundedRectangleBorder(
@@ -51,7 +54,7 @@ class Goal_ListPage extends StatelessWidget{
           ),
           Expanded(
             child: Container(
-              padding: EdgeInsets.fromLTRB(10,10,0,0),
+              padding: EdgeInsets.fromLTRB(10,0,0,0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -65,7 +68,7 @@ class Goal_ListPage extends StatelessWidget{
                           record.nickname,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                            fontSize: screenWidth*0.04,
                           ),
                         ),
                       ),
@@ -81,7 +84,7 @@ class Goal_ListPage extends StatelessWidget{
                           record.school,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 13,
+                            fontSize: screenWidth*0.03,
                             color: HexColor("#b4c7bb"),
                           ),
                         ),
@@ -121,7 +124,7 @@ class Goal_ListPage extends StatelessWidget{
                                 "더보기",
                                 style: TextStyle(
                                   color: HexColor("#fbb359"),
-                                  fontSize: 15,
+                                  fontSize: screenWidth*0.04,
                                 ),
                               ),
                               SizedBox(width: 10,),
@@ -131,6 +134,7 @@ class Goal_ListPage extends StatelessWidget{
                       ],
                     ),
                   ),
+                  SizedBox(height: screenWidth*0.02,),
                 ],
               ),
             ),

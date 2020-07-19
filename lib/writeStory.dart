@@ -10,14 +10,16 @@ import 'package:itda/help.dart';
 import 'connectStory.dart';
 
 class WriteStory extends StatefulWidget {
-  String storyKey;
+  String storyKey="키";
   WriteStory({Key key,@required this.storyKey}) : super(key: key);
   @override
   _WriteStoryState createState() => _WriteStoryState();
 }
 
 class _WriteStoryState extends State<WriteStory> {
-  String ssubject, scontent, srecord = "";
+  String ssubject="제목";
+  String scontent="내용";
+  String srecord = "녹음";
   static int sindex = 1;
   String sindexing = "$sindex";
 
@@ -29,7 +31,7 @@ class _WriteStoryState extends State<WriteStory> {
   String grade = "학년";
   String clas = "반";
   int point = -1;
-  dynamic data;
+  dynamic data="데이터";
   final _formKey = GlobalKey<FormState>();
 
   Future<String> getUser () async {
@@ -57,7 +59,7 @@ class _WriteStoryState extends State<WriteStory> {
   bool isRecord = false;
   bool isPlay = false;
   double playPosition = 0.0;
-  String file = "";
+  String file = "파일";
 
   @override
   void initState() {
@@ -207,7 +209,7 @@ class _WriteStoryState extends State<WriteStory> {
       body: Container(
         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: canRecord
-          ? SingleChildScrollView(
+            ? SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(
@@ -511,23 +513,6 @@ class _WriteStoryState extends State<WriteStory> {
                               ),
                             ),
                             SizedBox(height: 10.0,),
-                            Text('녹음파일',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                            SizedBox(height: 10.0,),
-                            Container(
-                              padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
-                              width: screenWidth - 45.0,
-                              height: 45.0,
-                              decoration: BoxDecoration(
-                                  color: const Color(0x69e9f4eb)
-                              ),
-                              child: Text(srecord),
-                            ),
                           ],
                         ),
                       ),
@@ -551,13 +536,8 @@ class _WriteStoryState extends State<WriteStory> {
                           child: GestureDetector(
                             child: _wPBuildConnectItem('assets/itda_orange.png','잇기(올리기)'),
                             onTap: () {
-                              if (_formKey.currentState.validate()) {
-                                Scaffold
-                                    .of(context)
-                                    .showSnackBar(SnackBar(content: Text('Processing Data')));
-                                storySetTapping();
-                                Navigator.pop(context, MaterialPageRoute(builder: (context) => ConnectStory()));
-                              }
+                              storySetTapping();
+                              Navigator.pop(context, MaterialPageRoute(builder: (context) => ConnectStory()));
                             },
                           ),
                         ),

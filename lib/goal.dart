@@ -73,7 +73,6 @@ class _GoalPageState extends State<GoalPage> {
 
   Future<void> _editChecker() async {
     final user = await FirebaseAuth.instance.currentUser();
-
     if(user.email == widget.email){
       return  Navigator.push(
           context,
@@ -214,10 +213,11 @@ class _GoalPageState extends State<GoalPage> {
                     ],
                   ),
                 ),
+                Container(width: 10.0,),
                 Container(
                   margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
                   width: queryData.size.width*0.5,
-                  height: queryData.size.height*0.3,
+                  height: queryData.size.height*0.35,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(
                           Radius.circular(5.0) //                 <--- border radius here
@@ -228,6 +228,7 @@ class _GoalPageState extends State<GoalPage> {
                     padding: EdgeInsets.fromLTRB(20,0,0,10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
                           children: [

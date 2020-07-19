@@ -1,6 +1,8 @@
 //https://github.com/rajayogan/flutterui-curveddesigns
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:permissions_plugin/permissions_plugin.dart';
 import 'package:itda/connectPoem.dart';
 import 'package:itda/help.dart';
 import 'package:itda/connectSong.dart';
@@ -12,8 +14,64 @@ class ConnectHeart extends StatefulWidget {
 }
 
 class _ConnectHeartState extends State<ConnectHeart> {
+  Future<void> checkPermissions(BuildContext context) async {
+
+    final PermissionState aks = await PermissionsPlugin.isIgnoreBatteryOptimization;
+
+    PermissionState resBattery;
+    if(aks != PermissionState.GRANTED)
+      resBattery = await PermissionsPlugin.requestIgnoreBatteryOptimization;
+
+    print(resBattery);
+
+    Map<Permission, PermissionState> permission = await PermissionsPlugin
+        .checkPermissions([
+      Permission.RECORD_AUDIO,
+    ]);
+
+    if( permission[Permission.RECORD_AUDIO] != PermissionState.GRANTED) {
+
+      try {
+        permission = await PermissionsPlugin
+            .requestPermissions([
+          Permission.RECORD_AUDIO,
+        ]);
+      } on Exception {
+        debugPrint("Error");
+      }
+
+      if( permission[Permission.RECORD_AUDIO] == PermissionState.GRANTED )
+        print("Login ok");
+      else
+        permissionsDenied(context);
+
+    } else {
+      print("Login ok");
+    }
+  }
+
+  void permissionsDenied(BuildContext context){
+    showDialog(context: context, builder: (BuildContext _context) {
+      return SimpleDialog(
+        title: const Text("Permisos denegados"),
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 15),
+            child: const Text(
+              "Debes conceder todo los permiso para poder usar esta aplicacion",
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black54
+              ),
+            ),
+          )
+        ],
+      );
+    });
+  }
   @override
   Widget build(BuildContext context) {
+    checkPermissions(context);
     return Scaffold(
       backgroundColor: Color(0xffe9f4eb),
       appBar: AppBar(
