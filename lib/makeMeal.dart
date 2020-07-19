@@ -87,6 +87,10 @@ class _MakeMealState extends State<MakeMeal> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+    var screenHeight = queryData.size.height;
+    var screenWidth = queryData.size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -468,6 +472,10 @@ class _MakeMealState extends State<MakeMeal> {
     );
   }
   Widget _smallImageItem(Function gettingImg, File sImgPath, String sImgName, String i){
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+    var screenHeight = queryData.size.height;
+    var screenWidth = queryData.size.width;
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -480,7 +488,7 @@ class _MakeMealState extends State<MakeMeal> {
                   padding: EdgeInsets.symmetric(horizontal: 1.0),
                   child: Container(
                     height: 80.0,
-                    width: 80.0,
+                    width: (screenWidth-40.0)/4.0,
                     child: sImgPath == null ?
                     Container(child: Image.asset('assets/add_photo.png'),)
                         : Image.file(sImgPath),
@@ -495,7 +503,7 @@ class _MakeMealState extends State<MakeMeal> {
                   padding: EdgeInsets.symmetric(horizontal: 1.0),
                   child: Container(
                     height: 30.0,
-                    width: 80.0,
+                    width: (screenWidth-40.0)/4.0,
                     child: TextFormField(
                       maxLines: 1,
                       //onChanged: (text) => sImgName = text,
@@ -542,6 +550,10 @@ class _MakeMealState extends State<MakeMeal> {
     );
   }
   Widget _bigImageItem(Function gettingImg, File bImgPath, String bImgName, String i){
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+    var screenHeight = queryData.size.height;
+    var screenWidth = queryData.size.width;
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -554,7 +566,7 @@ class _MakeMealState extends State<MakeMeal> {
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
                   child: Container(
                     height: 100.0,
-                    width: 100.0,
+                    width: (screenWidth-80.0)/2.0,
                     child: bImgPath == null ?
                     Container(child: Image.asset('assets/add_photo.png'),)
                         : Image.file(bImgPath),
@@ -569,7 +581,7 @@ class _MakeMealState extends State<MakeMeal> {
                   padding: EdgeInsets.symmetric(horizontal: 1.0),
                   child: Container(
                     height: 30.0,
-                    width: 100.0,
+                    width: (screenWidth-80.0)/2.0,
                     child: TextFormField(
                       maxLines: 1,
                       onChanged: (String value) {

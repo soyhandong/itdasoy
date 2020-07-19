@@ -404,6 +404,10 @@ class _ReadMealState extends State<ReadMeal> {
     );
   }
   Widget _smallImageItem(String sImgPath, String sImgName){
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+    var screenHeight = queryData.size.height;
+    var screenWidth = queryData.size.width;
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -412,7 +416,7 @@ class _ReadMealState extends State<ReadMeal> {
             children: <Widget>[
               Container(
                 height: 80.0,
-                width: 80.0,
+                width: (screenWidth-40.0)/4.0,
                 child: sImgPath == null ?
                 Container(child: Image.asset('assets/add_photo.png'),)
                     : Container(
@@ -429,7 +433,7 @@ class _ReadMealState extends State<ReadMeal> {
               ),
               Container(
                 height: 30.0,
-                width: 80.0,
+                width: (screenWidth-40.0)/4.0,
                 child: Text(sImgName),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -443,6 +447,10 @@ class _ReadMealState extends State<ReadMeal> {
     );
   }
   Widget _bigImageItem(String bImgPath, String bImgName){
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+    var screenHeight = queryData.size.height;
+    var screenWidth = queryData.size.width;
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -451,7 +459,7 @@ class _ReadMealState extends State<ReadMeal> {
             children: <Widget>[
               Container(
                 height: 100.0,
-                width: 150.0,
+                width: (screenWidth-80.0)/2.0,
                 child: bImgPath == null ?
                 Container(child: Image.asset('assets/add_photo.png'),)
                     : Container(
@@ -468,7 +476,7 @@ class _ReadMealState extends State<ReadMeal> {
               ),
               Container(
                 height: 30.0,
-                width: 150.0,
+                width: (screenWidth-80.0)/2.0,
                 child: Text(bImgName),
                 decoration: BoxDecoration(
                   color: Colors.white,

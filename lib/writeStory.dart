@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:medcorder_audio/medcorder_audio.dart';
 import 'package:itda/help.dart';
 import 'package:itda/storyConnect.dart';
 
@@ -48,12 +50,26 @@ class _WriteStoryState extends State<WriteStory> {
   FirebaseUser _storyfireUser;
   FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
 
+  MedcorderAudio audioModule = new MedcorderAudio();
+  bool canRecord = false;
+  double recordPower = 0.0;
+  double recordPosition = 0.0;
+  bool isRecord = false;
+  bool isPlay = false;
+  double playPosition = 0.0;
+  String file = "";
+
   @override
   void initState() {
     super.initState();
     getUser();
     _storyPrepareService();
     print('hello'+widget.storyKey);
+
+    audioModule.setCallBack((dynamic redata) {
+      _onEvent(redata);
+    });
+    _initSettings();
   }
 
   void _storyPrepareService() async {
@@ -64,12 +80,93 @@ class _WriteStoryState extends State<WriteStory> {
     await Firestore.instance.collection('storyList').document(widget.storyKey)
         .setData({
       'email':email, 'nickname':nickname, 'school':school, 'clas':clas, 'grade':grade,
-      'ssubject':ssubject, 'scontent':scontent, 'srecord': srecord, 'sindexing':sindexing,
+      'ssubject':ssubject, 'scontent':scontent, 'srecord': file, 'sindexing':sindexing,
       'storyKey':widget.storyKey});
+  }
+
+  Future _initSettings() async {
+    final String result = await audioModule.checkMicrophonePermissions();
+    if (result == 'OK') {
+      await audioModule.setAudioSettings();
+      setState(() {
+        canRecord = true;
+      });
+    }
+    return;
+  }
+
+  Future _startRecord() async {
+    try {
+      DateTime time = new DateTime.now();
+      setState(() {
+        file = time.millisecondsSinceEpoch.toString();
+      });
+      final String result = await audioModule.startRecord(file);
+      setState(() {
+        isRecord = true;
+      });
+      print('startRecord: ' + result);
+    } catch (e) {
+      file = "";
+      print('startRecord: fail');
+    }
+  }
+
+  Future _stopRecord() async {
+    try {
+      final String result = await audioModule.stopRecord();
+      print('stopRecord: ' + result);
+      setState(() {
+        isRecord = false;
+      });
+    } catch (e) {
+      print('stopRecord: fail');
+      setState(() {
+        isRecord = false;
+      });
+    }
+  }
+
+  Future _startStopPlay() async {
+    if (isPlay) {
+      await audioModule.stopPlay();
+    } else {
+      await audioModule.startPlay({
+        "file": file,
+        "position": 0.0,
+      });
+    }
+  }
+
+  void _onEvent(dynamic event) {
+    if (event['code'] == 'recording') {
+      double power = event['peakPowerForChannel'];
+      setState(() {
+        recordPower = (60.0 - power.abs().floor()).abs();
+        recordPosition = event['currentTime'];
+      });
+    }
+    if (event['code'] == 'playing') {
+      String url = event['url'];
+      setState(() {
+        playPosition = event['currentTime'];
+        isPlay = true;
+      });
+    }
+    if (event['code'] == 'audioPlayerDidFinishPlaying') {
+      setState(() {
+        playPosition = 0.0;
+        isPlay = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+    var screenHeight = queryData.size.height;
+    var screenWidth = queryData.size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -109,7 +206,8 @@ class _WriteStoryState extends State<WriteStory> {
       ),
       body: Container(
         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-        child: SingleChildScrollView(
+        child: canRecord
+          ? SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(
@@ -159,16 +257,177 @@ class _WriteStoryState extends State<WriteStory> {
                   ),
                 ),
                 Container(
-                  height: 60,
+                  height: 130,
                   decoration: BoxDecoration(
                       color: const Color(0xffe9f4eb)
                   ),
-                  child: Row(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      _recordingItem('assets/record.png','녹음 하기'),
-                      _recordingItem('assets/listen.png','녹음 듣기'),
-                      _recordingItem('assets/complete.png','녹음 완료'),
-                      _recordingItem('assets/rerecord.png','다시 녹음'),
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Container(width: 10.0,),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                              child: InkWell(
+                                child: Container(
+                                  child: isRecord ?
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Container(
+                                        width: 25,
+                                        height: 25,
+                                        child: Image.asset('assets/stop.png'),
+                                        //color: Colors.white,
+                                      ),
+                                      Container(
+                                        height: 3.0,
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          '녹음 끝내기',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: "Arita-dotum-_OTF",
+                                            fontStyle: FontStyle.normal,
+                                            fontSize: 9,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                      :
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Container(
+                                        width: 25,
+                                        height: 25,
+                                        child: Image.asset('assets/record.png'),
+                                        //color: Colors.white,
+                                      ),
+                                      Container(
+                                        height: 3.0,
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          '녹음 하기',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: "Arita-dotum-_OTF",
+                                            fontStyle: FontStyle.normal,
+                                            fontSize: 9,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                onTap: () {
+                                  if (isRecord) {
+                                    _stopRecord();
+                                  } else {
+                                    _startRecord();
+                                  }
+                                },
+                              ),
+                            ),
+                            Container(width: 10.0,),
+                            new Text('recording: ' + recordPosition.toString()),
+                          ],
+                        ),
+                        //width: 200.0,
+                      ),
+                      Container(height: 10.0,),
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Container(width: 10.0,),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                              child: InkWell(
+                                child: Container(
+                                  child: isPlay ?
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Container(
+                                        width: 25,
+                                        height: 25,
+                                        child: Image.asset('assets/stop.png'),
+                                        //color: Colors.white,
+                                      ),
+                                      Container(
+                                        height: 3.0,
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          '멈추기',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: "Arita-dotum-_OTF",
+                                            fontStyle: FontStyle.normal,
+                                            fontSize: 9,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                      :
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Container(
+                                        width: 25,
+                                        height: 25,
+                                        child: Image.asset('assets/listen.png'),
+                                        //color: Colors.white,
+                                      ),
+                                      Container(
+                                        height: 3.0,
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          '녹음 듣기',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: "Arita-dotum-_OTF",
+                                            fontStyle: FontStyle.normal,
+                                            fontSize: 9,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                onTap: () {
+                                  if (!isRecord && file.length > 0) {
+                                    _startStopPlay();
+                                  }
+                                },
+                              ),
+                            ),
+                            Container(width: 10.0,),
+                            new Text('playing: ' + playPosition.toString()),
+                          ],
+                        ),
+                        //width: 200.0,
+                      ),
                     ],
                   ),
                 ),
@@ -198,7 +457,7 @@ class _WriteStoryState extends State<WriteStory> {
                             SizedBox(height: 10.0,),
                             Container(
                               padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
-                              width: 350.0,
+                              width: screenWidth - 45.0,
                               height: 50.0,
                               decoration: BoxDecoration(
                                   color: const Color(0x69e9f4eb)
@@ -230,7 +489,7 @@ class _WriteStoryState extends State<WriteStory> {
                             SizedBox(height: 10.0,),
                             Container(
                               padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
-                              width: 350.0,
+                              width: screenWidth - 45.0,
                               height: 200.0,
                               decoration: BoxDecoration(
                                   color: const Color(0x69e9f4eb)
@@ -262,25 +521,12 @@ class _WriteStoryState extends State<WriteStory> {
                             SizedBox(height: 10.0,),
                             Container(
                               padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
-                              width: 350.0,
+                              width: screenWidth - 45.0,
                               height: 45.0,
                               decoration: BoxDecoration(
                                   color: const Color(0x69e9f4eb)
                               ),
-                              child: TextFormField(
-                                onChanged: (text) => srecord = text,
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return '녹음을 하세요';
-                                  } else
-                                    return null;
-                                },
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: '녹음을 하세요',
-                                  //labelText: "Enter your username",
-                                ),
-                              ),
+                              child: Text(srecord),
                             ),
                           ],
                         ),
@@ -340,6 +586,10 @@ class _WriteStoryState extends State<WriteStory> {
               ],
             ),
           ),
+        )
+            : Text(
+          '마이크 접근이 금지 되어있습니다. 설정에서 마이크 접근 허용을 해주세요!',
+          textAlign: TextAlign.center,
         ),
       ),
     );
