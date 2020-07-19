@@ -7,7 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:medcorder_audio/medcorder_audio.dart';
 import 'package:itda/help.dart';
-import 'package:itda/songConnect.dart';
+import 'package:itda/connectSong.dart';
 
 class WriteSong extends StatefulWidget {
   String songKey;
@@ -551,8 +551,13 @@ class _WriteSongState extends State<WriteSong> {
                           child: GestureDetector(
                             child: _wPBuildConnectItem('assets/itda_orange.png','잇기(올리기)'),
                             onTap: () {
-                              songSetTapping();
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => SongConnect()));
+                              if (_formKey.currentState.validate()) {
+                                Scaffold
+                                    .of(context)
+                                    .showSnackBar(SnackBar(content: Text('Processing Data')));
+                                songSetTapping();
+                                Navigator.pop(context, MaterialPageRoute(builder: (context) => ConnectSong()));
+                              }
                             },
                           ),
                         ),

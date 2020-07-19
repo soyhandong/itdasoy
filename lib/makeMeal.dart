@@ -330,8 +330,14 @@ class _MakeMealState extends State<MakeMeal> {
                         child: GestureDetector(
                           child: _wPBuildConnectItem('assets/itda_orange.png', '잇기(올리기)'),
                           onTap: () {
-                            setTapping();
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => MealList()));
+                            if (_formKey.currentState.validate()) {
+                              Scaffold
+                                  .of(context)
+                                  .showSnackBar(SnackBar(content: Text('Processing Data')));
+
+                              setTapping();
+                              Navigator.pop(context, MaterialPageRoute(builder: (context) => MealList()));
+                            }
                             },
                         ),
                       ),
@@ -533,7 +539,7 @@ class _MakeMealState extends State<MakeMeal> {
                       },
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: '이름쓰기',
+                        //hintText: '이름쓰기',
                         //labelText: "Enter your username",
                       ),
                     ),
@@ -604,7 +610,7 @@ class _MakeMealState extends State<MakeMeal> {
                       },
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: '이름쓰기',
+                        //hintText: '이름쓰기',
                         //labelText: "Enter your username",
                       ),
                     ),

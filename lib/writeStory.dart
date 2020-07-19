@@ -551,8 +551,13 @@ class _WriteStoryState extends State<WriteStory> {
                           child: GestureDetector(
                             child: _wPBuildConnectItem('assets/itda_orange.png','잇기(올리기)'),
                             onTap: () {
-                              storySetTapping();
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => ConnectStory()));
+                              if (_formKey.currentState.validate()) {
+                                Scaffold
+                                    .of(context)
+                                    .showSnackBar(SnackBar(content: Text('Processing Data')));
+                                storySetTapping();
+                                Navigator.pop(context, MaterialPageRoute(builder: (context) => ConnectStory()));
+                              }
                             },
                           ),
                         ),

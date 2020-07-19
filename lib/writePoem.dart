@@ -551,8 +551,13 @@ class _WritePoemState extends State<WritePoem> {
                           child: GestureDetector(
                             child: _wPBuildConnectItem('assets/itda_orange.png','잇기(올리기)'),
                             onTap: () {
-                              poemSetTapping();
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => ConnectPoem()));
+                              if (_formKey.currentState.validate()) {
+                                Scaffold
+                                    .of(context)
+                                    .showSnackBar(SnackBar(content: Text('Processing Data')));
+                                poemSetTapping();
+                                Navigator.pop(context, MaterialPageRoute(builder: (context) => ConnectPoem()));
+                              }
                             },
                           ),
                         ),
